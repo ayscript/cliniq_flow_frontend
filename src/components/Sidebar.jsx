@@ -30,7 +30,7 @@ const Sidebar = ({
       {/* --- SIDEBAR CONTAINER --- */}
       <aside
         className={`
-          z-40 h-screen bg-white border-r border-gray-200 transition-all duration-300 ease-in-out
+          z-40 h-screen bg-white border-r border-gray-200 transition-all duration-300 ease-in-out max-sm:fixed max-sm:top-0 max-sm:left-0
           ${isExpanded ? "w-64" : "w-20"} 
           ${isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}

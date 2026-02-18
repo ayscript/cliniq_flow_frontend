@@ -167,7 +167,7 @@ const Dashboard = () => {
         onNavigate={setActivePage}
         userProfile={user}
       />
-      <div className="flex-1 transition-all duration-300 p-4 mx-auto overflow-auto">
+      <div className="flex-1 transition-all duration-300 p-4 mx-auto overflow-auto bg-red-50">
         {/* Header */}
         <header className="mb-8">
           <WelcomeBanner user={user} />
@@ -202,7 +202,7 @@ const Dashboard = () => {
           />
         </div>
 
-        <div className="flex gap-8">
+        <div className="flex">
           {/* LEFT COLUMN: Add User Form */}
           {/* <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-8">
