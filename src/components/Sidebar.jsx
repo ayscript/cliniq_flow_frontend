@@ -22,7 +22,7 @@ const Sidebar = ({
       {/* --- MOBILE TRIGGER BUTTON --- */}
       <button
         onClick={toggleMobileMenu}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-white shadow-md text-gray-700"
+        className="sm:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-white shadow-md text-gray-700"
       >
         {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
@@ -30,9 +30,9 @@ const Sidebar = ({
       {/* --- SIDEBAR CONTAINER --- */}
       <aside
         className={`
-          z-40 h-screen bg-white border-r border-gray-200 transition-all duration-300 ease-in-out max-sm:fixed max-sm:top-0 max-sm:left-0
+          z-40 h-screen bg-white border-r border-gray-200 transition-all duration-300 ease-in-out max-[480px]:fixed max-[480px]:top-0 max-[480px]:left-0 max-sm:bg-green-500
           ${isExpanded ? "w-64" : "w-20"} 
-          ${isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+          ${isMobileOpen ? "translate-x-0" : "-translate-x-full sm:translate-x-0"}
         `}
       >
         <div className="h-full flex flex-col justify-between">
@@ -76,7 +76,7 @@ const Sidebar = ({
                       <span
                         className={`
                           ml-3 font-medium transition-all duration-200 overflow-hidden whitespace-nowrap
-                          ${isExpanded ? "w-auto opacity-100" : "w-0 opacity-0 lg:hidden"}
+                          ${isExpanded ? "w-auto opacity-100" : "w-0 opacity-0 sm:hidden"}
                         `}
                       >
                         {item.label}
@@ -84,7 +84,7 @@ const Sidebar = ({
 
                       {/* Tooltip for collapsed mode */}
                       {!isExpanded && (
-                        <div className="absolute left-full rounded-md px-2 py-1 ml-6 bg-gray-900 text-white text-xs opacity-0 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 whitespace-nowrap z-50 invisible lg:block">
+                        <div className="absolute left-full rounded-md px-2 py-1 ml-6 bg-gray-900 text-white text-xs opacity-0 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 whitespace-nowrap z-50 invisible sm:block">
                           {item.label}
                         </div>
                       )}
@@ -132,7 +132,7 @@ const Sidebar = ({
           {/* 4. COLLAPSE TOGGLE (Desktop Only) */}
           <button
             onClick={toggleSidebar}
-            className="hidden lg:flex absolute -right-3 top-20 bg-white border border-gray-200 rounded-full p-1 shadow-sm hover:bg-gray-50 text-gray-500"
+            className="hidden sm:flex absolute -right-3 top-20 bg-white border border-gray-200 rounded-full p-1 shadow-sm hover:bg-gray-50 text-gray-500"
           >
             {isExpanded ? (
               <ChevronLeft size={14} />
@@ -146,7 +146,7 @@ const Sidebar = ({
       {/* OVERLAY for Mobile */}
       {isMobileOpen && (
         <div
-          className="lg:hidden fixed inset-0 z-30 bg-black/20 backdrop-blur-sm"
+          className="sm:hidden fixed inset-0 z-30 bg-black/20 backdrop-blur-sm"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
