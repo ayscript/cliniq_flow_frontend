@@ -11,6 +11,7 @@ import NurseDashBoard from "./pages/NurseDashBoard";
 import Dashboard from "./pages/Dashboard";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
+import DoctorsDashboard from "./pages/DoctorsDashboard";
 
 // Protected Route Component
 const ProtectedRoute = () => {
@@ -52,6 +53,10 @@ function App() {
           <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<Layout />}>
               <Route index element={<Dashboard />} />
+              <Route path="/dashboard/login" element={<LoginPage />} />
+            </Route>
+            <Route path="/doctor" element={<Layout />}>
+              <Route index element={<DoctorsDashboard />} />
             </Route>
           <Route element={<ProtectedRoute />}>
           </Route>
