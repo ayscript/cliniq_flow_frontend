@@ -264,7 +264,7 @@ const Dashboard = () => {
           </div> */}
 
           {/* RIGHT COLUMN: Users Table */}
-          <div className="flex-1">
+          <div className="flex-1 w-full">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               <div className="p-6 border-b border-gray-200 flex justify-between items-center">
                 <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -281,7 +281,7 @@ const Dashboard = () => {
                   Loading data...
                 </div>
               ) : (
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto w-full">
                   <table className="w-full text-left">
                     <thead className="bg-gray-50 text-gray-600 text-sm uppercase tracking-wider">
                       <tr>
@@ -329,7 +329,7 @@ const Dashboard = () => {
                             </td>
 
                             {/* Status Badge */}
-                            <td className="px-6 py-4">
+                            <td className="px-2 py-4">
                               <span
                                 className={`px-3 py-1 rounded-full text-xs font-medium border
       ${user.status === "On Duty" ? "bg-green-100 text-green-700 border-green-200" : ""}
