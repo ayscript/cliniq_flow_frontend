@@ -159,205 +159,135 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="h-screen flex bg-gray-50 overflow-hidden">
-      <Sidebar
-        logo="MedAdmin"
-        menuItems={menuItems}
-        activeItem={activePage}
-        onNavigate={setActivePage}
-        userProfile={user}
-      />
-      <div className="flex-1 transition-all duration-300 p-4 mx-auto overflow-auto bg-red-50">
-        {/* Header */}
-        <header className="mb-8">
-          <WelcomeBanner user={user} />
-          <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
-            <Activity className="text-blue-600" />
-            Hospital Admin Dashboard
-          </h1>
-          <p className="text-gray-500 mt-1">
-            Overview of hospital staff and personnel management.
-          </p>
-        </header>
+    <div className="transition-all duration-300 p-4 overflow-auto w-full">
+      {/* Header */}
+      <header className="mb-8">
+        <WelcomeBanner user={user} />
+        <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
+          <Activity className="text-blue-600" />
+          Hospital Admin Dashboard
+        </h1>
+        <p className="text-gray-500 mt-1">
+          Overview of hospital staff and personnel management.
+        </p>
+      </header>
 
-        {/* Stats Cards Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <StatCard
-            title="Doctors"
-            count={stats.doctors}
-            icon={<Stethoscope size={32} />}
-            color="bg-blue-500"
-          />
-          <StatCard
-            title="Nurses"
-            count={stats.nurses}
-            icon={<UserPlus size={32} />}
-            color="bg-emerald-500"
-          />
-          <StatCard
-            title="Record Officers"
-            count={stats.officers}
-            icon={<ClipboardList size={32} />}
-            color="bg-amber-500"
-          />
-        </div>
+      {/* Stats Cards Section */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <StatCard
+          title="Doctors"
+          count={stats.doctors}
+          icon={<Stethoscope size={32} />}
+          color="bg-blue-500"
+        />
+        <StatCard
+          title="Nurses"
+          count={stats.nurses}
+          icon={<UserPlus size={32} />}
+          color="bg-emerald-500"
+        />
+        <StatCard
+          title="Record Officers"
+          count={stats.officers}
+          icon={<ClipboardList size={32} />}
+          color="bg-amber-500"
+        />
+      </div>
 
-        <div className="flex">
-          {/* LEFT COLUMN: Add User Form */}
-          {/* <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-8">
-              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <UserPlus size={20} className="text-gray-600" />
-                Add New Staff
+      <div className="flex">
+        <div className="flex-1 w-full">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="p-6 border-b border-gray-200 flex justify-between items-center">
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <Users size={20} className="text-gray-600" />
+                Staff Directory
               </h2>
-
-              <form onSubmit={handleAddUser} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                    placeholder="e.g. Sarah Connor"
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Role
-                  </label>
-                  <div className="relative">
-                    <select
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white transition"
-                      value={formData.role}
-                      onChange={(e) =>
-                        setFormData({ ...formData, role: e.target.value })
-                      }
-                    >
-                      <option value="Doctor">Doctor</option>
-                      <option value="Nurse">Nurse</option>
-                      <option value="Record Officer">Record Officer</option>
-                    </select>
-                    <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-gray-500">
-                      <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                        <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition-colors flex justify-center items-center gap-2"
-                >
-                  <UserPlus size={18} />
-                  Add User
-                </button>
-              </form>
+              <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                Total: {users.length}
+              </span>
             </div>
-          </div> */}
 
-          {/* RIGHT COLUMN: Users Table */}
-          <div className="flex-1 w-full">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-                <h2 className="text-xl font-semibold flex items-center gap-2">
-                  <Users size={20} className="text-gray-600" />
-                  Staff Directory
-                </h2>
-                <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                  Total: {users.length}
-                </span>
+            {isLoading ? (
+              <div className="p-8 text-center text-gray-500">
+                Loading data...
               </div>
-
-              {isLoading ? (
-                <div className="p-8 text-center text-gray-500">
-                  Loading data...
-                </div>
-              ) : (
-                <div className="overflow-x-auto w-full">
-                  <table className="w-full text-left">
-                    <thead className="bg-gray-50 text-gray-600 text-sm uppercase tracking-wider">
-                      <tr>
-                        <th className="px-6 py-4 font-medium">Name</th>
-                        <th className="px-6 py-4 font-medium">Role</th>
-                        <th className="px-6 py-4 font-medium">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {users.length > 0 ? (
-                        users.map((user, index) => (
-                          <tr
-                            key={user.id}
-                            className="hover:bg-gray-50 transition-colors border-b border-gray-100"
-                          >
-                            {/* Name & Email */}
-                            <td className="px-6 py-4">
-                              <div className="flex items-center gap-3">
-                                <img
-                                  src={user.avatar}
-                                  alt={user.name}
-                                  className="w-10 h-10 rounded-full bg-gray-200"
-                                />
-                                <div>
-                                  <p className="font-medium text-gray-900">
-                                    {user.name}
-                                  </p>
-                                  <p className="text-xs text-gray-500">
-                                    {user.email}
-                                  </p>
-                                </div>
+            ) : (
+              <div className="overflow-x-auto w-full">
+                <table className="w-full text-left">
+                  <thead className="bg-gray-50 text-gray-600 text-sm uppercase tracking-wider">
+                    <tr>
+                      <th className="px-6 py-4 font-medium">Name</th>
+                      <th className="px-6 py-4 font-medium">Role</th>
+                      <th className="px-6 py-4 font-medium">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {users.length > 0 ? (
+                      users.map((user, index) => (
+                        <tr
+                          key={user.id}
+                          className="hover:bg-gray-50 transition-colors border-b border-gray-100"
+                        >
+                          {/* Name & Email */}
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              <img
+                                src={user.avatar}
+                                alt={user.name}
+                                className="w-10 h-10 rounded-full bg-gray-200"
+                              />
+                              <div>
+                                <p className="font-medium text-gray-900">
+                                  {user.name}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {user.email}
+                                </p>
                               </div>
-                            </td>
+                            </div>
+                          </td>
 
-                            {/* Role & Department */}
-                            <td className="px-6 py-4">
-                              <div className="flex flex-col">
-                                <span className="text-sm font-medium text-gray-900">
-                                  {user.role}
-                                </span>
-                                <span className="text-xs text-gray-500">
-                                  {user.department}
-                                </span>
-                              </div>
-                            </td>
+                          {/* Role & Department */}
+                          <td className="px-6 py-4">
+                            <div className="flex flex-col">
+                              <span className="text-sm font-medium text-gray-900">
+                                {user.role}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {user.department}
+                              </span>
+                            </div>
+                          </td>
 
-                            {/* Status Badge */}
-                            <td className="px-2 py-4">
-                              <span
-                                className={`px-3 py-1 rounded-full text-xs font-medium border
+                          {/* Status Badge */}
+                          <td className="px-2 py-4">
+                            <span
+                              className={`px-3 py-1 rounded-full text-xs font-medium border
       ${user.status === "On Duty" ? "bg-green-100 text-green-700 border-green-200" : ""}
       ${user.status === "On Leave" ? "bg-orange-100 text-orange-700 border-orange-200" : ""}
       ${user.status === "In Surgery" ? "bg-purple-100 text-purple-700 border-purple-200" : ""}
       ${user.status === "Active" ? "bg-blue-100 text-blue-700 border-blue-200" : ""}
     `}
-                              >
-                                {user.status}
-                              </span>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td
-                            colSpan="3"
-                            className="px-6 py-8 text-center text-gray-500"
-                          >
-                            No users found. Add one to get started.
+                            >
+                              {user.status}
+                            </span>
                           </td>
                         </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
+                      ))
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan="3"
+                          className="px-6 py-8 text-center text-gray-500"
+                        >
+                          No users found. Add one to get started.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
       </div>
