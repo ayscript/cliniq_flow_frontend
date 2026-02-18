@@ -1,0 +1,51 @@
+export const patientsList = [
+  {
+    id: 1,
+    name: "Aisha Bello",
+    Age: 28,
+    urgency: "Emergency",
+    active: true,
+  },
+  {
+    id: 2,
+    name: "Chinedu Okafor",
+    Age: 45,
+    urgency: "Urgent",
+    active: true,
+  },
+  {
+    id: 3,
+    name: "Grace Johnson",
+    Age: 62,
+    urgency: "Routine",
+    active: false,
+  },
+  {
+    id: 4,
+    name: "Tunde Adebayo",
+    Age: 34,
+    urgency: "Follow-up",
+    active: true,
+  },
+  {
+    id: 5,
+    name: "Fatima Yusuf",
+    Age: 19,
+    urgency: "Emergency",
+    active: true,
+  },
+  {
+    id: 6,
+    name: "Daniel Mensah",
+    Age: 51,
+    urgency: "Routine",
+    active: false,
+  },
+  {
+    id: 7,
+    name: "Ngozi Eze",
+    Age: 40,
+    urgency: "Urgent",
+    active: true,
+  },
+];
