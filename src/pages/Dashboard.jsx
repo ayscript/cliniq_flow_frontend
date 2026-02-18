@@ -12,6 +12,7 @@ import {
   FileText,
 } from "lucide-react";
 import Sidebar from "../components/Sidebar";
+import WelcomeBanner from "../components/WelcomeBanner";
 
 const Dashboard = () => {
   // State for storing users and loading status
@@ -55,9 +56,60 @@ const Dashboard = () => {
       setError("Could not load dashboard data.");
       // Fallback mock data for demonstration purposes if API fails
       setUsers([
-        { id: 1, name: "Dr. Gregory House", role: "Doctor" },
-        { id: 2, name: "Nurse Ratched", role: "Nurse" },
-        { id: 3, name: "Officer Barbrady", role: "Record Officer" },
+        {
+          id: 1,
+          name: "Dr. Gregory House",
+          role: "Doctor",
+          department: "Diagnostic Medicine",
+          status: "On Duty",
+          email: "g.house@hospital.com",
+          avatar: "https://i.pravatar.cc/150?u=1",
+        },
+        {
+          id: 2,
+          name: "Sarah Ratched",
+          role: "Nurse",
+          department: "Psychiatric Ward",
+          status: "Active",
+          email: "s.ratched@hospital.com",
+          avatar: "https://i.pravatar.cc/150?u=2",
+        },
+        {
+          id: 3,
+          name: "Officer Barbrady",
+          role: "Record Officer",
+          department: "Administration",
+          status: "On Leave",
+          email: "barbrady@hospital.com",
+          avatar: "https://i.pravatar.cc/150?u=3",
+        },
+        {
+          id: 4,
+          name: "Dr. Allison Cameron",
+          role: "Doctor",
+          department: "Immunology",
+          status: "In Surgery",
+          email: "a.cameron@hospital.com",
+          avatar: "https://i.pravatar.cc/150?u=4",
+        },
+        {
+          id: 5,
+          name: "Nurse Jackie",
+          role: "Nurse",
+          department: "Emergency Room",
+          status: "Active",
+          email: "jackie@hospital.com",
+          avatar: "https://i.pravatar.cc/150?u=5",
+        },
+        {
+          id: 6,
+          name: "James Wilson",
+          role: "Doctor",
+          department: "Oncology",
+          status: "On Duty",
+          email: "j.wilson@hospital.com",
+          avatar: "https://i.pravatar.cc/150?u=6",
+        },
       ]);
     } finally {
       setIsLoading(false);
@@ -101,13 +153,13 @@ const Dashboard = () => {
   };
 
   const user = {
-    name: "Admin User",
+    name: "Boluwatife Gbadamosi",
     role: "Super Admin",
     avatar: "https://i.pravatar.cc/150?img=12",
   };
 
   return (
-    <div className="min-h-screen flex bg-gray-50">
+    <div className="h-screen flex bg-gray-50 overflow-hidden">
       <Sidebar
         logo="MedAdmin"
         menuItems={menuItems}
@@ -115,9 +167,10 @@ const Dashboard = () => {
         onNavigate={setActivePage}
         userProfile={user}
       />
-      <div className="flex-1 transition-all duration-300 p-4 mx-auto">
+      <div className="flex-1 transition-all duration-300 p-4 mx-auto overflow-auto">
         {/* Header */}
         <header className="mb-8">
+          <WelcomeBanner user={user} />
           <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
             <Activity className="text-blue-600" />
             Hospital Admin Dashboard
@@ -149,9 +202,9 @@ const Dashboard = () => {
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="flex gap-8">
           {/* LEFT COLUMN: Add User Form */}
-          <div className="lg:col-span-1">
+          {/* <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-8">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <UserPlus size={20} className="text-gray-600" />
@@ -208,10 +261,10 @@ const Dashboard = () => {
                 </button>
               </form>
             </div>
-          </div>
+          </div> */}
 
           {/* RIGHT COLUMN: Users Table */}
-          <div className="lg:col-span-2">
+          <div className="flex-1">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               <div className="p-6 border-b border-gray-200 flex justify-between items-center">
                 <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -241,26 +294,51 @@ const Dashboard = () => {
                       {users.length > 0 ? (
                         users.map((user, index) => (
                           <tr
-                            key={user.id || index}
-                            className="hover:bg-gray-50 transition-colors"
+                            key={user.id}
+                            className="hover:bg-gray-50 transition-colors border-b border-gray-100"
                           >
+                            {/* Name & Email */}
                             <td className="px-6 py-4">
                               <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
-                                  <User size={16} />
+                                <img
+                                  src={user.avatar}
+                                  alt={user.name}
+                                  className="w-10 h-10 rounded-full bg-gray-200"
+                                />
+                                <div>
+                                  <p className="font-medium text-gray-900">
+                                    {user.name}
+                                  </p>
+                                  <p className="text-xs text-gray-500">
+                                    {user.email}
+                                  </p>
                                 </div>
-                                <span className="font-medium text-gray-900">
-                                  {user.name}
+                              </div>
+                            </td>
+
+                            {/* Role & Department */}
+                            <td className="px-6 py-4">
+                              <div className="flex flex-col">
+                                <span className="text-sm font-medium text-gray-900">
+                                  {user.role}
+                                </span>
+                                <span className="text-xs text-gray-500">
+                                  {user.department}
                                 </span>
                               </div>
                             </td>
+
+                            {/* Status Badge */}
                             <td className="px-6 py-4">
-                              <RoleBadge role={user.role} />
-                            </td>
-                            <td className="px-6 py-4">
-                              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                <span className="w-1.5 h-1.5 rounded-full bg-green-600"></span>
-                                Active
+                              <span
+                                className={`px-3 py-1 rounded-full text-xs font-medium border
+      ${user.status === "On Duty" ? "bg-green-100 text-green-700 border-green-200" : ""}
+      ${user.status === "On Leave" ? "bg-orange-100 text-orange-700 border-orange-200" : ""}
+      ${user.status === "In Surgery" ? "bg-purple-100 text-purple-700 border-purple-200" : ""}
+      ${user.status === "Active" ? "bg-blue-100 text-blue-700 border-blue-200" : ""}
+    `}
+                              >
+                                {user.status}
                               </span>
                             </td>
                           </tr>
