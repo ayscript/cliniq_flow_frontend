@@ -1,18 +1,19 @@
 import { useState } from "react";
 import NurseIntakeForm from "../components/NurseIntakeForm";
 import TriageResult from "../components/TriageResult";
+import ActiveQueue from "../components/ActiveQueue";
 
-export default function NurseDashboard() {
+function NurseDashboard() {
   const [triageResult, setTriageResult] = useState(null);
 
-  function handleSubmit(triageData) {
-    setTriageResult(triageData);
-  }
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <NurseIntakeForm onSubmit={handleSubmit} />
+    <div className="grid grid-cols-3 gap-6 p-6">
+      <NurseIntakeForm onSubmit={setTriageResult} />
       <TriageResult result={triageResult} />
+      <ActiveQueue />
     </div>
   );
 }
+
+export default NurseDashboard;
+

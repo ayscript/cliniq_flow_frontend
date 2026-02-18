@@ -1,21 +1,12 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  Outlet,
-} from "react-router-dom";
-import { LoginPage } from "./pages/LoginPage";
+import NurseDashboard from "./pages/NurseDashboard";
 
 function App() {
-
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/dashboard" element={<NurseDashboard />} />
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
-
-export default App
