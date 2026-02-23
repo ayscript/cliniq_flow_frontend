@@ -1,8 +1,111 @@
+// import { useState } from "react";
+// import VoiceButton from "./VoiceButton";
+
+// export default function NurseIntakeForm({ onSubmit }) {
+//   const [formData, setFormData] = useState({
+//     age: "",
+//     weight: "",
+//     vitals: "",
+//     symptoms: "",
+//   });
+
+//   function handleChange(e) {
+//     setFormData({ ...formData, [e.target.name]: e.target.value });
+//   }
+
+//   function handleSubmit(e) {
+//     e.preventDefault();
+//     onSubmit(formData);
+//   }
+
+//   return (
+//     <div className=" bg-white rounded-lg shadow p-6 items-center ">
+//       <h2 className="font-semibold text-lg mb-4">Nurse Intake Form</h2>
+
+//       <form onSubmit={handleSubmit} className="space-y-4">
+//         <input
+//           name="age"
+//           placeholder="Age"
+//           className="w-full border p-2 rounded"
+//           onChange={handleChange}
+//         />
+//         {/* Sex Selector */}
+// <div className="mt-4">
+//   <label className="block font-medium mb-1">Sex</label>
+
+//   <div className="flex gap-6">
+//     <label className="flex items-center gap-2">
+//       <input
+//         type="radio"
+//         name="sex"
+//         value="male"
+//         className="accent-teal-600"
+//       />
+//       Male
+//     </label>
+
+//     <label className="flex items-center gap-2">
+//       <input
+//         type="radio"
+//         name="sex"
+//         value="female"
+//         className="accent-teal-600"
+//       />
+//       Female
+//     </label>
+//   </div>
+// </div>
+
+
+//         <input
+//           name="weight"
+//           placeholder="Weight (kg)"
+//           className="w-full border p-2 rounded"
+//           onChange={handleChange}
+//         />
+//         {/* Vital Signs Section */}
+
+//         <h3 className="font-semibold text-gray-800 mb-3">
+//             Vital Signs
+//         </h3>
+
+        
+
+//         <input
+//           name="vitals"
+//           placeholder="Vitals (Temp, BP, Pulse)"
+//           className="w-full border p-2 rounded"
+//           onChange={handleChange}
+//         />
+
+//         <textarea
+//           name="symptoms"
+//           placeholder="Enter symptoms..."
+//           className="w-full border p-2 rounded"
+//           rows="3"
+//           onChange={handleChange}
+//         />
+
+//         <VoiceButton />
+
+//         <button className="w-full bg-blue-600 text-white py-2 rounded">
+//           Submit Intake
+//         </button>
+//       </form>
+//     </div>
+//   );
+// }
 import { useState } from "react";
 import VoiceButton from "./VoiceButton";
 
 export default function NurseIntakeForm({ onSubmit = () => {} }) {
   const [formData, setFormData] = useState({
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    age: "",
+    sex: "",
+    weight: "",
     temperature: "",
     respiratoryRate: "",
     pulse: "",
@@ -55,182 +158,219 @@ export default function NurseIntakeForm({ onSubmit = () => {} }) {
       reasons.push("Vitals within normal range");
     }
 
-    onSubmit({ level, color, reasons });
+    onSubmit({ 
+      ...formData,
+      level,
+      color,
+      reasons,
+});
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold">Nurse Intake Form</h2>
-      </div>
+  <div className="bg-white rounded-lg shadow p-4 sm:p-6 w-full">
+    <h2 className="text-lg sm:text-xl font-semibold mb-6">
+      Nurse Intake Form
+    </h2>
 
-      {/* Age */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Age</label>
+    {/* Name Section */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label className="block text-sm font-medium mb-1">
+          First Name
+        </label>
         <input
-          type="number"
+          type="text"
+          name="firstName"
+          value={formData.firstName}
+          onChange={handleChange}
           className="w-full border rounded px-3 py-2"
         />
       </div>
 
-      {/* Sex */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Sex</label>
+      <div>
+        <label className="block text-sm font-medium mb-1">
+          Middle Name
+        </label>
+        <input
+          type="text"
+          name="middleName"
+          value={formData.middleName}
+          onChange={handleChange}
+          className="w-full border rounded px-3 py-2"
+        />
+      </div>
+
+      <div className="sm:col-span-2">
+        <label className="block text-sm font-medium mb-1">
+          Last Name
+        </label>
+        <input
+          type="text"
+          name="lastName"
+          value={formData.lastName}
+          onChange={handleChange}
+          className="w-full border rounded px-3 py-2"
+        />
+      </div>
+    </div>
+
+    {/* Age + Sex */}
+    <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label className="block text-sm font-medium mb-1">
+          Age
+        </label>
+        <input
+          type="number"
+          name="age"
+          value={formData.age}
+          onChange={handleChange}
+          className="w-full border rounded px-3 py-2"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-2">
+          Sex
+        </label>
         <div className="flex gap-6">
           <label className="flex items-center gap-2">
-            <input type="radio" name="sex" className="accent-teal-600" />
+            <input
+              type="radio"
+              name="sex"
+              value="male"
+              checked={formData.sex === "male"}
+              onChange={handleChange}
+              className="accent-teal-600"
+            />
             Male
           </label>
+
           <label className="flex items-center gap-2">
-            <input type="radio" name="sex" className="accent-teal-600" />
+            <input
+              type="radio"
+              name="sex"
+              value="female"
+              checked={formData.sex === "female"}
+              onChange={handleChange}
+              className="accent-teal-600"
+            />
             Female
           </label>
         </div>
       </div>
+    </div>
 
-      {/* Weight */}
-      <div className="mb-6 flex items-center gap-4">
-        <div className="flex-1">
-          <label className="block text-sm font-medium mb-1">Weight</label>
-          <input
-            type="number"
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
-
-        <button
-          type="button"
-          onClick={() => setIsEstimated(!isEstimated)}
-          className="flex items-center gap-2 mt-6 cursor-pointer"
-        >
-          <div className={`w-10 h-5 rounded-full relative transition-colors ${
-            isEstimated ? "bg-teal-500" : "bg-gray-300"
-          }`}>
-            <div className={`w-4 h-4 bg-white rounded-full absolute top-0.5 transition-all ${
-              isEstimated ? "right-1" : "left-1"
-            }`}></div>
-          </div>
-          <span className="text-sm">Estimated</span>
-        </button>
+    {/* Weight */}
+    <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-4">
+      <div className="flex-1">
+        <label className="block text-sm font-medium mb-1">
+          Weight
+        </label>
+        <input
+          type="number"
+          name="weight"
+          value={formData.weight}
+          onChange={handleChange}
+          className="w-full border rounded px-3 py-2"
+        />
       </div>
 
-      {/* Vital Signs */}
-      <div className="mb-6">
-        <h3 className="font-semibold mb-4">Vital Signs</h3>
+      <button
+        type="button"
+        onClick={() => setIsEstimated(!isEstimated)}
+        className="flex items-center gap-2 mt-2 sm:mt-6"
+      >
+        <div
+          className={`w-10 h-5 rounded-full relative transition-colors ${
+            isEstimated ? "bg-teal-500" : "bg-gray-300"
+          }`}
+        >
+          <div
+            className={`w-4 h-4 bg-white rounded-full absolute top-0.5 transition-all ${
+              isEstimated ? "right-1" : "left-1"
+            }`}
+          ></div>
+        </div>
+        <span className="text-sm">Estimated</span>
+      </button>
+    </div>
 
-        {/* Temperature */}
-        <div className="mb-3 flex items-center gap-2">
-          <label className="w-40 text-sm">Temperature:</label>
+    {/* Vital Signs */}
+    <div className="mt-8">
+      <h3 className="font-semibold mb-4">Vital Signs</h3>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm mb-1">
+            Temperature (°C)
+          </label>
           <input
             type="number"
             name="temperature"
             value={formData.temperature}
             onChange={handleChange}
-            className="flex-1 border rounded px-3 py-2"
+            className="w-full border rounded px-3 py-2"
           />
-          <span className="text-sm">°C</span>
         </div>
 
-        {/* Respiratory Rate */}
-        <div className="mb-3 flex items-center gap-2">
-          <label className="w-40 text-sm">Respiratory Rate:</label>
+        <div>
+          <label className="block text-sm mb-1">
+            Respiratory Rate (breaths/min)
+          </label>
           <input
             type="number"
             name="respiratoryRate"
             value={formData.respiratoryRate}
             onChange={handleChange}
-            className="flex-1 border rounded px-3 py-2"
+            className="w-full border rounded px-3 py-2"
           />
-          <span className="text-sm">breaths/min</span>
         </div>
 
-        {/* Pulse */}
-        <div className="mb-3 flex items-center gap-2">
-          <label className="w-40 text-sm">Pulse:</label>
+        <div className="sm:col-span-2">
+          <label className="block text-sm mb-1">
+            Pulse (bpm)
+          </label>
           <input
             type="number"
             name="pulse"
             value={formData.pulse}
             onChange={handleChange}
-            className="flex-1 border rounded px-3 py-2"
+            className="w-full border rounded px-3 py-2"
           />
-          <span className="text-sm">bpm</span>
-        </div>
-
-        {/* Blood Pressure */}
-        <div className="flex items-center gap-2">
-          <label className="w-40 text-sm">Blood Pressure:</label>
-          <input
-            type="number"
-            placeholder=""
-            className="w-24 border rounded px-3 py-2"
-          />
-          <span>/</span>
-          <input
-            type="number"
-            className="w-24 border rounded px-3 py-2"
-          />
-          <span className="text-sm">mmHg</span>
         </div>
       </div>
-
-      {/* Symptoms */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Symptoms</label>
-        <textarea
-          rows="3"
-          name="symptoms"
-          value={formData.symptoms}
-          onChange={handleChange}
-          placeholder="Enter symptoms..."
-          className="w-full border rounded px-3 py-2"
-        />
-      </div>
-
-      {/* Voice Input */}
-      <button
-        type="button"
-        className="w-full flex items-center justify-center gap-2 border rounded py-2 mb-4"
-      >
-        🎤 Voice Input
-      </button>
-
-      {/* Submit */}
-      <button
-        type="button"
-        onClick={runTriage}
-        className="w-full bg-blue-600 text-white py-2 rounded"
-      >
-        Submit Intake
-      </button>
-
-      {/* Triage Result */}
-      {/* {triageResult && (
-        <div
-          className={`mt-6 p-4 rounded text-white ${
-            triageResult.color === "red"
-              ? "bg-red-600"
-              : triageResult.color === "yellow"
-              ? "bg-yellow-500"
-              : "bg-green-600"
-          }`}
-        >
-          <h3 className="font-bold text-lg mb-2">
-            {triageResult.level === "RED"
-              ? "Emergency"
-              : triageResult.level === "YELLOW"
-              ? "Urgent"
-              : "Stable"}
-          </h3>
-
-          <ul className="list-disc ml-5 text-sm">
-            {triageResult.reasons.map((reason, index) => (
-              <li key={index}>{reason}</li>
-            ))}
-          </ul>
-        </div>
-      )} */}
     </div>
-  );
+
+    {/* Symptoms */}
+    <div className="mt-6">
+      <label className="block text-sm font-medium mb-1">
+        Symptoms
+      </label>
+      <textarea
+        rows="3"
+        name="symptoms"
+        value={formData.symptoms}
+        onChange={handleChange}
+        placeholder="Enter symptoms..."
+        className="w-full border rounded px-3 py-2"
+      />
+    </div>
+
+    {/* Voice */}
+    <div className="mt-4">
+      <VoiceButton />
+    </div>
+
+    {/* Submit */}
+    <button
+      type="button"
+      onClick={runTriage}
+      className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded mt-6 transition"
+    >
+      Submit Intake
+    </button>
+  </div>
+);
+
 }
