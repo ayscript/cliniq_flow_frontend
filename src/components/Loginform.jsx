@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {useAuthStore} from "../store/authStore";
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -6,14 +7,15 @@ const LoginForm = () => {
     password: "",
   });
 
+  const { login } = useAuthStore();
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Logging in with:", formData);
-    // Add your authentication logic here
+    login(formData);
   };
 
   return (

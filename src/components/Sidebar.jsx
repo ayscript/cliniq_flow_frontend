@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Menu, X, ChevronLeft, ChevronRight, LogOut } from "lucide-react";
+import { useAuthStore } from "../store/authStore";
 
 const Sidebar = ({
   logo,
@@ -10,6 +11,7 @@ const Sidebar = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const { logout } = useAuthStore();
 
   // Toggle sidebar width (Desktop)
   const toggleSidebar = () => setIsExpanded(!isExpanded);
@@ -122,7 +124,7 @@ const Sidebar = ({
               </div>
 
               {isExpanded && (
-                <button className="text-gray-400 hover:text-red-500 transition-colors p-2">
+                <button onClick={logout} className="text-gray-400 hover:text-red-500 transition-colors p-2">
                   <LogOut size={18} />
                 </button>
               )}
