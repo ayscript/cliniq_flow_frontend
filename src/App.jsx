@@ -51,15 +51,16 @@ function App() {
             }
           />
           <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<Layout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="/dashboard/login" element={<LoginPage />} />
-            </Route>
-            <Route path="/doctor" element={<Layout />}>
-              <Route index element={<DoctorsDashboard />} />
-            </Route>
-          <Route element={<ProtectedRoute />}>
+          <Route path="/nurse" element={<NurseDashBoard />} />
+          <Route path="/dashboard" element={<Layout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="/dashboard/login" element={<LoginPage />} />
           </Route>
+          <Route path="/doctor" element={<Layout />}>
+            <Route index element={<DoctorsDashboard />} />
+          </Route>
+          {/* <Route element={<ProtectedRoute />}>
+          </Route> */}
         </Routes>
       </BrowserRouter>
     </AuthProvider>
