@@ -11,6 +11,7 @@ import NurseDashBoard from "./pages/NurseDashBoard";
 import Dashboard from "./pages/Dashboard";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
+import RecordOfficerDasboard from "./pages/RecordOfficerDasboard";
 
 // Protected Route Component
 const ProtectedRoute = () => {
@@ -50,11 +51,11 @@ function App() {
             }
           />
           <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<Layout />}>
-              <Route index element={<Dashboard />} />
-            </Route>
-          <Route element={<ProtectedRoute />}>
+          <Route path="/record-officer" element={<RecordOfficerDasboard />} />
+          <Route path="/dashboard" element={<Layout />}>
+            <Route index element={<Dashboard />} />
           </Route>
+          <Route element={<ProtectedRoute />}></Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
