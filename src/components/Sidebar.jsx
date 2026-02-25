@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Menu, X, ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 import { useAuthStore } from "../store/authStore";
+import { Link } from "react-router";
 
 const Sidebar = ({
   logo,
@@ -56,7 +57,8 @@ const Sidebar = ({
                 const isActive = activeItem === item.id;
                 return (
                   <li key={item.id || index}>
-                    <button
+                    <Link
+                      to={item?.url || "#"}
                       title={item.label}
                       onClick={() => {
                         onNavigate(item.id);
@@ -90,7 +92,7 @@ const Sidebar = ({
                           {item.label}
                         </div>
                       )}
-                    </button>
+                    </Link>
                   </li>
                 );
               })}
