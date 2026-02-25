@@ -13,6 +13,7 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import RecordOfficerDasboard from "./pages/RecordOfficerDasboard";
 import DoctorsDashboard from "./pages/DoctorsDashboard";
+import { Users } from "./pages/Admin/Users";
 
 function App() {
   const ProtectedRoute = () => {
@@ -51,14 +52,16 @@ function App() {
               </PublicOnlyRoute>
             }
           />
-
-          <Route path="/nurseDashboard" element={<NurseDashboard />} />
           <Route path="/" element={<Home />} />
-          <Route path="/record-officer" element={<RecordOfficerDasboard />} />
-          <Route path="/dashboard" element={<Layout />}>
-            <Route index element={<Dashboard />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Layout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="/dashboard/users" element={<Users />} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Route>
+            <Route path="/nurse-dashboard" element={<NurseDashboard />} />
+            <Route path="/record-officer" element={<RecordOfficerDasboard />} />
           </Route>
-          <Route element={<ProtectedRoute />}></Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>

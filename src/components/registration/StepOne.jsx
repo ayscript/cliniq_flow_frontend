@@ -2,6 +2,7 @@ import React from 'react';
 import Select from '../ui/Select';
 import Input from '../ui/Input';
 import { User } from 'lucide-react';
+import { Label } from '../ui/Label';
 
 const StepOne = ({ formData, handleChange }) => {
   return (
@@ -9,10 +10,10 @@ const StepOne = ({ formData, handleChange }) => {
       {/* Photo & Basic Info Row */}
       <div className="flex flex-col md:flex-row gap-8">
         {/* Passport Placeholder */}
-        <label htmlFor='upload' className="w-32 cursor-pointer hover:bg-gray-200 h-40 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-center p-2">
+        <Label htmlFor='upload' tabindex="0">
           <span className="text-2xl mb-2"><User size={32} /></span>
           <span className="text-[10px] uppercase font-bold text-gray-400">Upload Photo</span>
-        </label>
+        </Label>
 
         <input type='file' className='border hidden' id='upload' />
 

@@ -13,10 +13,12 @@ import {
 } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import WelcomeBanner from "../components/WelcomeBanner";
+import { useAdminStore } from "../store/adminStore";
 
 const Dashboard = () => {
   // State for storing users and loading status
-  const [users, setUsers] = useState([]);
+  // const [users, setUsers] = useState([]);
+  const {users, setUsers} = useAdminStore();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activePage, setActivePage] = useState("dashboard");
@@ -50,7 +52,7 @@ const Dashboard = () => {
       const data = await response.json();
       // Assuming API returns an array of users or an object { users: [...] }
       // Adjust 'data.users' or 'data' based on your actual API response structure
-      setUsers(Array.isArray(data) ? data : data.users || []);
+      // setUsers(Array.isArray(data) ? data : data.users || []);
     } catch (err) {
       console.error(err);
       setError("Could not load dashboard data.");

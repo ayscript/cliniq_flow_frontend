@@ -16,10 +16,10 @@ export default function Layout() {
       label: "Dashboard",
       icon: <LayoutDashboard size={20} />,
     },
-    { id: "doctors", label: "Users", icon: <Users size={20} /> },
-    { id: "records", label: "Records", icon: <FileText size={20} /> },
-    { id: "settings", label: "Settings", icon: <Settings size={20} /> },
-    { id: "help", label: "Help & Support", icon: <HelpCircle size={20} /> },
+    { id: "users", label: "Users", icon: <Users size={20} />, url: "/dashboard/users" },
+    { id: "records", label: "Records", icon: <FileText size={20} />, url: "/dashboard/records" },
+    { id: "settings", label: "Settings", icon: <Settings size={20} />, url: "/dashboard/settings" },
+    { id: "help", label: "Help & Support", icon: <HelpCircle size={20} />, url: "/dashboard/help" },
   ];
 
   const [activePage, setActivePage] = useState("dashboard");
