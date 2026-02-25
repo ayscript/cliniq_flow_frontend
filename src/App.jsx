@@ -1,3 +1,4 @@
+import NurseDashboard from "./pages/NurseDashboard";
 import {
   BrowserRouter,
   Routes,
@@ -7,37 +8,37 @@ import {
 } from "react-router-dom";
 import { LoginPage } from "./pages/LoginPage";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
-import NurseDashBoard from "./pages/NurseDashBoard";
 import Dashboard from "./pages/Dashboard";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import RecordOfficerDasboard from "./pages/RecordOfficerDasboard";
-
-// Protected Route Component
-const ProtectedRoute = () => {
-  const { user, loading } = useAuth();
-
-  if (loading)
-    return (
-      <div className="h-screen w-full flex items-center justify-center">
-        Loading...
-      </div>
-    );
-  if (!user) return <Navigate to="/login" replace />;
-
-  return <Outlet />; // Renders the child route (Layout)
-};
-
-const PublicOnlyRoute = ({ children }) => {
-  const { user, loading } = useAuth();
-
-  if (loading) return null;
-  if (user) return <Navigate to="/dashboard" replace />;
-
-  return children;
-};
+import DoctorsDashboard from "./pages/DoctorsDashboard";
 
 function App() {
+  const ProtectedRoute = () => {
+    const { user, loading } = useAuth();
+
+    if (loading)
+      return (
+        <div className="h-screen w-full flex items-center justify-center">
+          Loading...
+        </div>
+      );
+
+    if (!user) return <Navigate to="/login" replace />;
+
+    return <Outlet />;
+  };
+
+  const PublicOnlyRoute = ({ children }) => {
+    const { user, loading } = useAuth();
+
+    if (loading) return null;
+    if (user) return <Navigate to="/dashboard" replace />;
+
+    return children;
+  };
+
   return (
     <AuthProvider>
       <BrowserRouter>
@@ -50,6 +51,8 @@ function App() {
               </PublicOnlyRoute>
             }
           />
+
+          <Route path="/nurseDashboard" element={<NurseDashboard />} />
           <Route path="/" element={<Home />} />
           <Route path="/record-officer" element={<RecordOfficerDasboard />} />
           <Route path="/dashboard" element={<Layout />}>
