@@ -1,22 +1,213 @@
+import { useEffect, useState } from "react";
 import { useAdminStore } from "../../store/adminStore";
-
+import { Users as UsersIcon } from "lucide-react";
+import { Eye, EyeOff, UserPlus, ListFilter, Search } from "lucide-react";
+import { generateRandomPassword } from "../../utils/uitils";
 
 export const Users = () => {
-  const { users, isLoading } = useAdminStore();
+  const { users, isLoading, fetchUsers } = useAdminStore();
+  const [showAddUserForm, setShowAddUserForm] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    role: "",
+  });
 
-  
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   return (
-    <div className="flex">
-      <div className="flex-1 w-full">
+    <div className="flex flex-col flex-1 p-4 overflow-auto">
+      <div>
+        <h1 className="text-2xl font-bold mb-4">Users Management</h1>
+        <p className="text-gray-600 mb-6">
+          View and manage all staff members in the hospital.
+        </p>
+      </div>
+      <div className="w-full">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-xl font-semibold flex items-center gap-2">
-              <Users size={20} className="text-gray-600" />
+          <div className="p-6 border-b border-gray-200 flex items-center justify-start gap-3 flex-wrap">
+            <h2 className="text-xl font-semibold flex items-center gap-2 mr-auto">
+              <UsersIcon size={20} className="text-gray-600" />
               Staff Directory
             </h2>
             <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
               Total: {users.length}
             </span>
+            {/* Add user button */}
+            <button
+              className="inline-flex items-center gap-2 ml-4 px-5 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-md shadow-blue-500/20 hover:bg-blue-700 hover:-translate-y-0.5 active:scale-95 transition-all duration-200"
+              onClick={() => setShowAddUserForm(true)}
+              aria-haspopup="dialog"
+              aria-controls="add-user-popup"
+              aria-expanded={showAddUserForm}
+            >
+              <UserPlus size={18} strokeWidth={2.5} />
+              <span>Add User</span>
+            </button>
+            {/* Add User form (pop up) */}
+            {showAddUserForm && (
+              <div
+                className="fixed inset-0 w-full h-screen bg-slate-900/60 z-50 flex items-center justify-center backdrop-blur-sm p-4 transition-all"
+                id="add-user-popup"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="popup-title"
+                onClick={(e) => {
+                  if (e.target === e.currentTarget) {
+                    setShowAddUserForm(false);
+                  }
+                }}
+              >
+                <form className="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200">
+                  {/* Header */}
+                  <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                    <h3
+                      className="text-xl font-bold text-gray-900"
+                      id="popup-title"
+                    >
+                      Add New User
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      Create a new staff account for the directory.
+                    </p>
+                  </div>
+
+                  {/* Body */}
+                  <div className="p-6 flex flex-col gap-5">
+                    {/* Email Field */}
+                    <div className="flex flex-col gap-1.5">
+                      <label
+                        htmlFor="email"
+                        className="text-sm font-semibold text-gray-700 ml-1"
+                      >
+                        User Email
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        placeholder="e.g. name@hospital.com"
+                        className="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                        value={formData.email}
+                        onChange={(e) =>
+                          setFormData({ ...formData, email: e.target.value })
+                        }
+                        autoFocus
+                      />
+                    </div>
+
+                    {/* Password Field */}
+                    <div className="flex flex-col gap-1.5">
+                      <div className="flex justify-between items-center ml-1">
+                        <label
+                          htmlFor="password"
+                          className="text-sm font-semibold text-gray-700"
+                        >
+                          Password
+                        </label>
+                        <button
+                          type="button"
+                          className="text-xs font-bold text-blue-600 hover:text-blue-700 uppercase tracking-tight"
+                          onClick={() =>
+                            setFormData({
+                              ...formData,
+                              password: generateRandomPassword(),
+                            })
+                          }
+                        >
+                          Generate Random
+                        </button>
+                      </div>
+                      <div className="relative group">
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          id="password"
+                          placeholder="Min. 8 characters"
+                          className="w-full border border-gray-300 rounded-xl px-4 py-2.5 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                          value={formData.password}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              password: e.target.value,
+                            })
+                          }
+                        />
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 rounded-md transition-colors"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <EyeOff size={18} />
+                          ) : (
+                            <Eye size={18} />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Role Selection */}
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-sm font-semibold text-gray-700 ml-1">
+                        Assigned Role
+                      </label>
+                      <select className="w-full border border-gray-300 rounded-xl px-4 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer text-gray-700 appearance-none shadow-sm">
+                        <option value="">Select Role...</option>
+                        <option value="doctor">Doctor</option>
+                        <option value="nurse">Nurse</option>
+                        <option value="officer">Record Officer</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-end gap-3">
+                    <button
+                      type="button"
+                      className="px-4 py-2 text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-xl transition-all"
+                      onClick={() => setShowAddUserForm(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-6 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/30 hover:bg-blue-700 active:scale-95 transition-all"
+                    >
+                      Add User
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+          </div>
+          <div>
+            {/* search box */}
+            <div className="p-4 bg-white border-b border-gray-100 flex items-center gap-3">
+              {/* Unified Search Container */}
+              <div className="relative flex-1 group">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                  <Search
+                    size={18}
+                    className="text-gray-400 group-focus-within:text-blue-500 transition-colors"
+                  />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search users by name, email, or role..."
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-sm placeholder:text-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
+                />
+              </div>
+
+              {/* Refined Filter Button */}
+              <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-300 active:bg-gray-100 transition-all shadow-sm">
+                <ListFilter size={18} className="text-gray-500" />
+                <span>Filter</span>
+                {/* Optional: Add a subtle badge if filters are active */}
+                <span className="flex h-2 w-2 rounded-full bg-blue-600"></span>
+              </button>
+            </div>
           </div>
 
           {isLoading ? (
