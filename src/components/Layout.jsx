@@ -15,6 +15,7 @@ export default function Layout() {
       id: "dashboard",
       label: "Dashboard",
       icon: <LayoutDashboard size={20} />,
+      url: "/dashboard"
     },
     { id: "users", label: "Users", icon: <Users size={20} />, url: "/dashboard/users" },
     { id: "records", label: "Records", icon: <FileText size={20} />, url: "/dashboard/records" },
