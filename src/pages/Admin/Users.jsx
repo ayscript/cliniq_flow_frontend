@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
 import { useAdminStore } from "../../store/adminStore";
-import { Users as UsersIcon } from "lucide-react";
-import { Eye, EyeOff, UserPlus, ListFilter, Search } from "lucide-react";
+import {
+  Users as UsersIcon,
+  Eye,
+  EyeOff,
+  UserPlus,
+  ListFilter,
+  Search,
+  Info,
+} from "lucide-react";
 import { generateRandomPassword } from "../../utils/uitils";
+import { api } from "../../utils/api";
 
 export const Users = () => {
   const { users, isLoading, fetchUsers } = useAdminStore();
@@ -14,9 +22,32 @@ export const Users = () => {
     role: "",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  async function handleSubmit() {
+    setLoading(true);
+    try {
+      const data = await api.post("/admin/invite-user", formData);
+      console.log(data);
+      if (data?.detail) {
+        throw new Error(data?.detail);
+      }
+      setFormData({
+        email: "",
+        password: "",
+        role: "",
+      });
+    } catch (error) {
+      setError(error?.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="flex flex-col flex-1 p-4 overflow-auto">
@@ -61,7 +92,13 @@ export const Users = () => {
                   }
                 }}
               >
-                <form className="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200">
+                <form
+                  className="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSubmit();
+                  }}
+                >
                   {/* Header */}
                   <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
                     <h3
@@ -74,6 +111,17 @@ export const Users = () => {
                       Create a new staff account for the directory.
                     </p>
                   </div>
+
+                  {error && (
+                    <div className="p-4">
+                      <div className="mb-4 p-3 bg-red-100 text-red-700 border-l-4 border-red-700 flex gap-2 items-center text-sm rounded-lg">
+                        <span className="mr-2">
+                          <Info size={16} />
+                        </span>
+                        <span>{error}</span>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Body */}
                   <div className="p-6 flex flex-col gap-5">
@@ -91,8 +139,10 @@ export const Users = () => {
                         placeholder="e.g. name@hospital.com"
                         className="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                         value={formData.email}
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          setError(null)
                           setFormData({ ...formData, email: e.target.value })
+                        }
                         }
                         autoFocus
                       />
@@ -127,11 +177,13 @@ export const Users = () => {
                           placeholder="Min. 8 characters"
                           className="w-full border border-gray-300 rounded-xl px-4 py-2.5 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                           value={formData.password}
-                          onChange={(e) =>
+                          onChange={(e) => {
+                            setError(null)
                             setFormData({
                               ...formData,
                               password: e.target.value,
                             })
+                          }
                           }
                         />
                         <button
@@ -153,11 +205,19 @@ export const Users = () => {
                       <label className="text-sm font-semibold text-gray-700 ml-1">
                         Assigned Role
                       </label>
-                      <select className="w-full border border-gray-300 rounded-xl px-4 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer text-gray-700 appearance-none shadow-sm">
+                      <select
+                        className="w-full border border-gray-300 rounded-xl px-4 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer text-gray-700 appearance-none shadow-sm"
+                        value={formData.role}
+                        onChange={(e) => {
+                          setError(null)
+                          setFormData({ ...formData, role: e.target.value });
+                        }}
+                      >
                         <option value="">Select Role...</option>
                         <option value="doctor">Doctor</option>
                         <option value="nurse">Nurse</option>
-                        <option value="officer">Record Officer</option>
+                        <option value="record_officer">Record Officer</option>
+                        <option value="admin">Admin Officer</option>
                       </select>
                     </div>
                   </div>
@@ -173,9 +233,10 @@ export const Users = () => {
                     </button>
                     <button
                       type="submit"
-                      className="px-6 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/30 hover:bg-blue-700 active:scale-95 transition-all"
+                      disabled={loading}
+                      className="px-6 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/30 hover:bg-blue-700 active:scale-95 transition-all disabled:bg-blue-600/60 disabled:cursor-not-allowed"
                     >
-                      Add User
+                      {loading ? "Adding User..." : "Add User"}
                     </button>
                   </div>
                 </form>
