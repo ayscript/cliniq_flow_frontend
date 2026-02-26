@@ -103,7 +103,7 @@ const Sidebar = ({
     `}
             >
               {/* Avatar Section */}
-              <div className="relative flex-shrink-0">
+              <div className="relative shrink-0">
                 <img
                   src={
                     userProfile?.avatar ||
