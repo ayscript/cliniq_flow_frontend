@@ -18,6 +18,18 @@ const api = {
         const data = await response.json()
 
         return data
+    },
+    get: async function(endpoint){
+        const response = await fetch(`${apiUrl}${endpoint}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${auth_token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        const data = await response.json();
+        return data;
     }
 }
 

@@ -67,6 +67,7 @@ const DoctorsDashboard = () => {
 
   return (
     <div className="flex flex-1 h-screen bg-slate-50 overflow-hidden font-sans">
+      <Sidebar />
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Header */}
         <header className="bg-white border-b border-slate-200 px-8 py-4 flex justify-between items-center shrink-0">
