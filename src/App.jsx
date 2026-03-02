@@ -15,6 +15,7 @@ import RecordOfficerDasboard from "./pages/RecordOfficerDasboard";
 import DoctorsDashboard from "./pages/DoctorsDashboard";
 import { Users } from "./pages/Admin/Users";
 
+
 function App() {
   const ProtectedRoute = () => {
     const { user, loading } = useAuth();
@@ -61,6 +62,7 @@ function App() {
             </Route>
             <Route path="/nurse-dashboard" element={<NurseDashboard />} />
             <Route path="/record-officer" element={<RecordOfficerDasboard />} />
+            <Route path="/doctor-dashboard" element={<DoctorsDashboard />} />
           </Route>
         </Routes>
       </BrowserRouter>

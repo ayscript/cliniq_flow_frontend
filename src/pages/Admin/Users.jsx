@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { generateRandomPassword } from "../../utils/uitils";
 import { api } from "../../utils/api";
+import { ToastContainer, toast, Flip } from "react-toastify";
 
 export const Users = () => {
   const { users, isLoading, fetchUsers } = useAdminStore();
@@ -26,7 +27,9 @@ export const Users = () => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetchUsers();
+    if (!users[0]){
+      fetchUsers();
+    }
   }, []);
 
   async function handleSubmit() {
@@ -37,6 +40,17 @@ export const Users = () => {
       if (data?.detail) {
         throw new Error(data?.detail);
       }
+      toast.success(data.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Flip,
+      });
       setFormData({
         email: "",
         password: "",
@@ -140,10 +154,9 @@ export const Users = () => {
                         className="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                         value={formData.email}
                         onChange={(e) => {
-                          setError(null)
-                          setFormData({ ...formData, email: e.target.value })
-                        }
-                        }
+                          setError(null);
+                          setFormData({ ...formData, email: e.target.value });
+                        }}
                         autoFocus
                       />
                     </div>
@@ -178,13 +191,12 @@ export const Users = () => {
                           className="w-full border border-gray-300 rounded-xl px-4 py-2.5 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                           value={formData.password}
                           onChange={(e) => {
-                            setError(null)
+                            setError(null);
                             setFormData({
                               ...formData,
                               password: e.target.value,
-                            })
-                          }
-                          }
+                            });
+                          }}
                         />
                         <button
                           type="button"
@@ -209,7 +221,7 @@ export const Users = () => {
                         className="w-full border border-gray-300 rounded-xl px-4 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer text-gray-700 appearance-none shadow-sm"
                         value={formData.role}
                         onChange={(e) => {
-                          setError(null)
+                          setError(null);
                           setFormData({ ...formData, role: e.target.value });
                         }}
                       >
@@ -280,27 +292,22 @@ export const Users = () => {
                   <tr>
                     <th className="px-6 py-4 font-medium">Name</th>
                     <th className="px-6 py-4 font-medium">Role</th>
-                    <th className="px-6 py-4 font-medium">Status</th>
+                    {/* <th className="px-6 py-4 font-medium">Status</th> */}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {users.length > 0 ? (
                     users.map((user, index) => (
                       <tr
-                        key={user.id}
+                        key={index}
                         className="hover:bg-gray-50 transition-colors border-b border-gray-100"
                       >
                         {/* Name & Email */}
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
-                            <img
-                              src={user.avatar}
-                              alt={user.name}
-                              className="w-10 h-10 rounded-full bg-gray-200"
-                            />
                             <div>
                               <p className="font-medium text-gray-900">
-                                {user.name}
+                                {user?.name || user?.email || "Not Available"}
                               </p>
                               <p className="text-xs text-gray-500">
                                 {user.email}
@@ -313,7 +320,11 @@ export const Users = () => {
                         <td className="px-6 py-4">
                           <div className="flex flex-col">
                             <span className="text-sm font-medium text-gray-900">
-                              {user.role}
+                              {user.role === "record_officer"
+                                ? "Record Officer"
+                                : String(user.role)[0].toUpperCase() +
+                                  String(user.role).slice(1, user.length)}
+                              {/* {user.role} */}
                             </span>
                             <span className="text-xs text-gray-500">
                               {user.department}
@@ -322,7 +333,7 @@ export const Users = () => {
                         </td>
 
                         {/* Status Badge */}
-                        <td className="px-2 py-4">
+                        {/* <td className="px-2 py-4">
                           <span
                             className={`px-3 py-1 rounded-full text-xs font-medium border
       ${user.status === "On Duty" ? "bg-green-100 text-green-700 border-green-200" : ""}
@@ -333,7 +344,7 @@ export const Users = () => {
                           >
                             {user.status}
                           </span>
-                        </td>
+                        </td> */}
                       </tr>
                     ))
                   ) : (
@@ -352,6 +363,19 @@ export const Users = () => {
           )}
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Flip}
+      />
     </div>
   );
 };

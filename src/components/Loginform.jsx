@@ -17,9 +17,13 @@ const LoginForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    login(formData);
+    try{
+      await login(formData);
+    } catch(e){
+      console.log(e)
+    }
   };
 
   return (

@@ -18,7 +18,7 @@ import { useAdminStore } from "../store/adminStore";
 const Dashboard = () => {
   // State for storing users and loading status
   // const [users, setUsers] = useState([]);
-  const {users, setUsers, fetchUsers, isLoading} = useAdminStore();
+  const { users, setUsers, fetchUsers, isLoading } = useAdminStore();
   const [error, setError] = useState(null);
   const [activePage, setActivePage] = useState("dashboard");
 
@@ -30,16 +30,22 @@ const Dashboard = () => {
 
   // Calculate stats dynamically from the user list
   const stats = {
-    doctors: users.filter((u) => u.role === "Doctor").length,
-    nurses: users.filter((u) => u.role === "Nurse").length,
-    officers: users.filter((u) => u.role === "Record Officer").length,
+    doctors: users.filter((u) => u.role?.toLowerCase() === "doctor").length,
+    nurses: users.filter((u) => u.role?.toLowerCase() === "nurse").length,
+    officers: users.filter(
+      (u) =>
+        u.role?.toLowerCase() === "record officer" ||
+        u.role?.toLowerCase() === "record_officer",
+    ).length,
   };
 
   // --- API INTERACTION ---
 
   // 1. Fetch Users on Component Mount
   useEffect(() => {
-    fetchUsers();
+    if (!users[0]){
+      fetchUsers();
+    }
   }, []);
 
   const menuItems = [
@@ -120,7 +126,41 @@ const Dashboard = () => {
         />
       </div>
 
-      
+      {/* User list table */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h2 className="text-xl font-semibold mb-4">Staff Directory</h2>
+        {isLoading ? (
+          <p className="text-gray-500">Loading users...</p>
+        ) : users.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead className="bg-gray-50 text-gray-600 text-sm uppercase">
+                <tr>
+                  <th className="px-6 py-3">Name</th>
+                  <th className="px-6 py-3">Role</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {users.map((u) => (
+                  <tr key={u.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4">
+                      {u.display_name || u.name || u.email || "Not Available"}
+                    </td>
+                    <td className="px-6 py-4">
+                      {u.role === "record_officer"
+                        ? "Record Officer"
+                        : String(u.role)[0].toUpperCase() +
+                          String(u.role).slice(1, u.length)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="text-gray-500">No users available.</p>
+        )}
+      </div>
     </div>
   );
 };
