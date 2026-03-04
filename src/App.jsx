@@ -15,6 +15,16 @@ import RecordOfficerDasboard from "./pages/RecordOfficerDasboard";
 import DoctorsDashboard from "./pages/DoctorsDashboard";
 import { Users } from "./pages/Admin/Users";
 
+// Role-based redirect mapping
+const getRoleBasedRoute = (role) => {
+  const roleRoutes = {
+    admin: "/dashboard",
+    nurse: "/nurse-dashboard",
+    record_officer: "/record-officer",
+    doctor: "/doctor-dashboard",
+  };
+  return roleRoutes[role] || "/";
+};
 
 function App() {
   const ProtectedRoute = () => {
@@ -34,11 +44,36 @@ function App() {
     return <Outlet />;
   };
 
+  const RoleProtectedRoute = ({ children, allowedRoles }) => {
+    const { user, loading } = useAuth();
+
+    if (loading)
+      return (
+        <div className="h-screen w-full flex items-center justify-center">
+          Loading...
+        </div>
+      );
+
+    const userRole = user?.user_metadata?.role;
+    
+    if (!allowedRoles.includes(userRole)) {
+      const redirectUrl = getRoleBasedRoute(userRole);
+      return <Navigate to={redirectUrl} replace />;
+    }
+
+    return children;
+  };
+
   const PublicOnlyRoute = ({ children }) => {
     const { user, loading } = useAuth();
 
     if (loading) return null;
-    if (user) return <Navigate to="/dashboard" replace />;
+    
+    if (user) {
+      const userRole = user?.user_metadata?.role;
+      const redirectUrl = getRoleBasedRoute(userRole);
+      return <Navigate to={redirectUrl} replace />;
+    }
 
     return children;
   };
@@ -57,14 +92,42 @@ function App() {
           />
           <Route path="/" element={<Home />} />
           <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Layout />}>
+            <Route
+              path="/dashboard"
+              element={
+                <RoleProtectedRoute allowedRoles={["admin"]}>
+                  <Layout />
+                </RoleProtectedRoute>
+              }
+            >
               <Route index element={<Dashboard />} />
               <Route path="/dashboard/users" element={<Users />} />
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Route>
-            <Route path="/nurse-dashboard" element={<NurseDashboard />} />
-            <Route path="/record-officer" element={<RecordOfficerDasboard />} />
-            <Route path="/doctor-dashboard" element={<DoctorsDashboard />} />
+            <Route
+              path="/nurse-dashboard"
+              element={
+                <RoleProtectedRoute allowedRoles={["nurse"]}>
+                  <NurseDashboard />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/record-officer"
+              element={
+                <RoleProtectedRoute allowedRoles={["record_officer"]}>
+                  <RecordOfficerDasboard />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/doctor-dashboard"
+              element={
+                <RoleProtectedRoute allowedRoles={["doctor"]}>
+                  <DoctorsDashboard />
+                </RoleProtectedRoute>
+              }
+            />
           </Route>
         </Routes>
       </BrowserRouter>
