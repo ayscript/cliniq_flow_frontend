@@ -11,22 +11,15 @@ import {
   HelpCircle,
   FileText,
 } from "lucide-react";
-import Sidebar from "../components/Sidebar";
 import WelcomeBanner from "../components/WelcomeBanner";
 import { useAdminStore } from "../store/adminStore";
+import { useAuthStore } from "../store/authStore";
 
 const Dashboard = () => {
   // State for storing users and loading status
   // const [users, setUsers] = useState([]);
-  const { users, setUsers, fetchUsers, isLoading } = useAdminStore();
-  const [error, setError] = useState(null);
-  const [activePage, setActivePage] = useState("dashboard");
-
-  // State for the Add User Form
-  const [formData, setFormData] = useState({
-    name: "",
-    role: "Doctor", // Default selection
-  });
+  const { users, fetchUsers, isLoading } = useAdminStore();
+  const { user } = useAuthStore()
 
   // Calculate stats dynamically from the user list
   const stats = {
@@ -61,32 +54,32 @@ const Dashboard = () => {
   ];
 
   // 2. Add User Function
-  const handleAddUser = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("/add_users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+  // const handleAddUser = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await fetch("/add_users", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(formData),
+  //     });
 
-      if (response.ok) {
-        // Refresh list to show new user and update counts
-        fetchUsers();
-        setFormData({ ...formData, name: "" }); // Reset name field only
-        alert(`${formData.role} added successfully!`);
-      } else {
-        alert("Failed to add user.");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error connecting to server.");
-    }
-  };
+  //     if (response.ok) {
+  //       // Refresh list to show new user and update counts
+  //       fetchUsers();
+  //       setFormData({ ...formData, name: "" }); // Reset name field only
+  //       alert(`${formData.role} added successfully!`);
+  //     } else {
+  //       alert("Failed to add user.");
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert("Error connecting to server.");
+  //   }
+  // };
 
-  const user = {
-    name: "Boluwatife Gbadamosi",
-    role: "Super Admin",
+  const user_profile = {
+    name: user.email,
+    role: user.user_metadata.role,
     avatar: "https://i.pravatar.cc/150?img=12",
   };
 
@@ -94,7 +87,7 @@ const Dashboard = () => {
     <div className="transition-all duration-300 p-4 overflow-auto w-full">
       {/* Header */}
       <header className="mb-8">
-        <WelcomeBanner user={user} />
+        <WelcomeBanner user={user_profile} />
         <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
           <Activity className="text-blue-600" />
           Hospital Admin Dashboard
@@ -141,8 +134,8 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {users.map((u) => (
-                  <tr key={u.id} className="hover:bg-gray-50">
+                {users.map((u, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       {u.display_name || u.name || u.email || "Not Available"}
                     </td>

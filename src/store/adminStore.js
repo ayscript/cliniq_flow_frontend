@@ -6,6 +6,7 @@ const useAdminStore = create((set) => {
     users: [],
     isLoading: false,
     error: null,
+    reset: () => set({users: [], isLoading: false, error: null}),
     setUsers: (users) => set({ users }),
     addUser: (user) => set((state) => ({ users: [...state.users, user] })),
     removeUser: (userId) =>

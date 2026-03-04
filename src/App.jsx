@@ -20,6 +20,8 @@ function App() {
   const ProtectedRoute = () => {
     const { user, loading } = useAuth();
 
+    console.log(user)
+
     if (loading)
       return (
         <div className="h-screen w-full flex items-center justify-center">
