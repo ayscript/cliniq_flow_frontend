@@ -2,10 +2,11 @@ import { getToken } from "./uitils"
 
 const apiUrl = "http://127.0.0.1:8000"
 
-const auth_token = await getToken()
+
 
 const api = {
-    post: async function(endpoint, payload){
+    post: async function(endpoint, payload){ 
+        const auth_token = await getToken()
         const response = await fetch(`${apiUrl}${endpoint}`, {
             method: "POST",
             headers: {
@@ -20,6 +21,7 @@ const api = {
         return data
     },
     get: async function(endpoint){
+        const auth_token = await getToken()
         const response = await fetch(`${apiUrl}${endpoint}`, {
             method: "GET",
             headers: {

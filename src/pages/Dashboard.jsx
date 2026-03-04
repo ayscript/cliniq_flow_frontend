@@ -18,7 +18,7 @@ import { useAdminStore } from "../store/adminStore";
 const Dashboard = () => {
   // State for storing users and loading status
   // const [users, setUsers] = useState([]);
-  const { users, setUsers, fetchUsers, isLoading } = useAdminStore();
+  const { users, setUsers, fetchUsers, isLoading, adminError } = useAdminStore();
   const [error, setError] = useState(null);
   const [activePage, setActivePage] = useState("dashboard");
 
@@ -43,7 +43,7 @@ const Dashboard = () => {
 
   // 1. Fetch Users on Component Mount
   useEffect(() => {
-    if (!users[0]){
+    if (!users[0]) {
       fetchUsers();
     }
   }, []);
@@ -63,6 +63,10 @@ const Dashboard = () => {
   // 2. Add User Function
   const handleAddUser = async (e) => {
     e.preventDefault();
+    if (adminError) {
+      alert("Admin service is currently unavailable. Cannot add user.");
+      return;
+    }
     try {
       const response = await fetch("/add_users", {
         method: "POST",
@@ -102,6 +106,11 @@ const Dashboard = () => {
         <p className="text-gray-500 mt-1">
           Overview of hospital staff and personnel management.
         </p>
+        {adminError && (
+          <div className="mt-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700">
+            {adminError}
+          </div>
+        )}
       </header>
 
       {/* Stats Cards Section */}
@@ -131,6 +140,8 @@ const Dashboard = () => {
         <h2 className="text-xl font-semibold mb-4">Staff Directory</h2>
         {isLoading ? (
           <p className="text-gray-500">Loading users...</p>
+        ) : adminError ? (
+          <p className="text-gray-500">Unable to load staff data.</p>
         ) : users.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left">

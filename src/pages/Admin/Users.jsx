@@ -14,7 +14,7 @@ import { api } from "../../utils/api";
 import { ToastContainer, toast, Flip } from "react-toastify";
 
 export const Users = () => {
-  const { users, isLoading, fetchUsers } = useAdminStore();
+  const { users, isLoading, fetchUsers, adminError } = useAdminStore();
   const [showAddUserForm, setShowAddUserForm] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -27,12 +27,17 @@ export const Users = () => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    if (!users[0]){
+    if (!users[0] && !adminError){
       fetchUsers();
     }
   }, []);
 
   async function handleSubmit() {
+    if (adminError) {
+      setError("Admin service unavailable. Cannot add user.");
+      return;
+    }
+
     setLoading(true);
     try {
       const data = await api.post("/admin/invite-user", formData);
@@ -70,6 +75,11 @@ export const Users = () => {
         <p className="text-gray-600 mb-6">
           View and manage all staff members in the hospital.
         </p>
+        {adminError && (
+          <div className="mb-4 p-3 bg-yellow-100 text-yellow-700 border-l-4 border-yellow-700 text-sm rounded-lg">
+            {adminError}
+          </div>
+        )}
       </div>
       <div className="w-full">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -88,6 +98,7 @@ export const Users = () => {
               aria-haspopup="dialog"
               aria-controls="add-user-popup"
               aria-expanded={showAddUserForm}
+              disabled={!!adminError}
             >
               <UserPlus size={18} strokeWidth={2.5} />
               <span>Add User</span>
