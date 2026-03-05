@@ -1,5 +1,5 @@
 export const DOCTORS = [
-  { id: 1, name: "Dr. Aremo Anuoluwapo", room: "Rm 4", available: true },
+  { id: 1, name: "Dr. Ajayi Anuoluwapo", room: "Rm 4", available: true },
   { id: 2, name: "Salahu Abiola Ishaq", room: "Rm 1", available: true },
   { id: 3, name: "Sule-Odu Ibrahim", room: "Rm 2", available: true },
   { id: 4, name: "Abikoye Peter O", room: "Rm 3", available: false },
@@ -8,7 +8,7 @@ export const DOCTORS = [
 export const INITIAL_PATIENTS = [
   {
     id: 1,
-    name: "kemilola pelumi",
+    name: "james",
     gender: "male",
     time: "08:56:49 am",
     pid: "1111111",
@@ -112,12 +112,12 @@ export const INITIAL_PATIENTS = [
   },
   {
     id: 4,
-    name: "ALAO-AFUNLEHIN HALIMA",
+    name: "Babatunde HALIMA",
     gender: "female",
     time: "08:11:37 am",
-    pid: "10034262",
+    pid: "5672111",
     dob: "27/12/1979",
-    age: "46 Years",
+    age: "40 Years",
     enc: "576479",
     status: "Awaiting Authorization",
     doctor: "Sule-Odu Ibrahim",

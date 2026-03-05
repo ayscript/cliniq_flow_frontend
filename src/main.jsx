@@ -13,11 +13,12 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import { PatientProvider } from "./components/PatientContext";
+import NurseDashboard  from "./pages/NurseDashboard";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <PatientProvider>
-      <App />
+      <NurseDashboard />
     </PatientProvider>
   </React.StrictMode>
 );

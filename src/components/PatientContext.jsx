@@ -1,9 +1,8 @@
-// 
-// src/components/PatientContext.jsx
 import { createContext, useContext, useEffect, useState } from "react";
-import api from "../services/api";
 
 const PatientContext = createContext();
+
+const BASE_URL = "http://127.0.0.1:8000";
 
 export function PatientProvider({ children }) {
   const [patients, setPatients] = useState([]);
@@ -13,8 +12,15 @@ export function PatientProvider({ children }) {
   const fetchPatients = async () => {
     try {
       setLoading(true);
-      const data = await api.getPatients();
-      setPatients(data);
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${BASE_URL}/record-officer/patients`, {
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { "Authorization": `Bearer ${token}` } : {}),
+        },
+      });
+      const data = await response.json();
+      setPatients(Array.isArray(data) ? data : data.results || []);
     } catch (err) {
       console.error("Failed to load patients:", err);
       setError("Could not load patients. Is the server running?");

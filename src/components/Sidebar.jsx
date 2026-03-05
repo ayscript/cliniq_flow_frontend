@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Menu, X, ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 import { useAuthStore } from "../store/authStore";
+import { Link, NavLink } from "react-router";
 
 const Sidebar = ({
   logo,
@@ -24,7 +25,7 @@ const Sidebar = ({
       {/* --- MOBILE TRIGGER BUTTON --- */}
       <button
         onClick={toggleMobileMenu}
-        className="sm:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-white shadow-md text-gray-700"
+        className="sm:hidden fixed top-4 right-4 z-50 p-2 rounded-md bg-white shadow-md text-gray-700"
       >
         {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
@@ -53,23 +54,19 @@ const Sidebar = ({
           <nav className="flex-1 overflow-y-auto overflow-x-hidden py-4">
             <ul className="space-y-1 px-3">
               {menuItems.map((item, index) => {
-                const isActive = activeItem === item.id;
                 return (
                   <li key={item.id || index}>
-                    <button
+                    <NavLink
+                      to={item?.url || "#"}
+                      end
                       title={item.label}
                       onClick={() => {
                         onNavigate(item.id);
                         setIsMobileOpen(false); // Close mobile menu on click
                       }}
-                      className={`
-                        relative flex items-center w-full p-3 rounded-lg transition-colors group
-                        ${
-                          isActive
-                            ? "bg-blue-50 text-blue-600"
-                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                        }
-                      `}
+                      className={({ isActive }) => {
+                        return `relative flex items-center w-full p-3 rounded-lg transition-colors group ${isActive ? "bg-blue-50 text-blue-600" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"}`;
+                      }}
                     >
                       <span className="flex items-center justify-center">
                         {item.icon}
@@ -90,7 +87,7 @@ const Sidebar = ({
                           {item.label}
                         </div>
                       )}
-                    </button>
+                    </NavLink>
                   </li>
                 );
               })}
@@ -98,36 +95,57 @@ const Sidebar = ({
           </nav>
 
           {/* 3. FOOTER / USER PROFILE */}
-          <div className="border-t border-gray-100 p-3">
+          <div className="mt-auto border-t border-gray-100 p-3 bg-gray-50/50">
             <div
-              className={`flex items-center ${isExpanded ? "justify-between" : "justify-center"}`}
+              className={`
+      group flex items-center p-2 rounded-xl transition-all duration-300
+      ${isExpanded ? "hover:bg-white hover:shadow-sm" : "justify-center"}
+    `}
             >
-              <div className="flex items-center gap-3">
+              {/* Avatar Section */}
+              <div className="relative shrink-0">
                 <img
                   src={
                     userProfile?.avatar ||
                     "https://ui-avatars.com/api/?name=User&background=random"
                   }
                   alt="Avatar"
-                  className="w-10 h-10 rounded-full bg-gray-200"
+                  className="w-10 h-10 rounded-xl object-cover ring-2 ring-white shadow-sm"
                 />
-                <div
-                  className={`flex flex-col overflow-hidden transition-all duration-300 ${isExpanded ? "w-32 opacity-100" : "w-0 opacity-0"}`}
-                >
-                  <span className="text-sm font-semibold text-gray-700 truncate">
-                    {userProfile?.name || "User"}
-                  </span>
-                  <span className="text-xs text-gray-500 truncate">
-                    {userProfile?.role || "Admin"}
-                  </span>
-                </div>
+                {/* Online Status Indicator */}
+                <span className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-white"></span>
               </div>
 
-              {isExpanded && (
-                <button onClick={logout} className="text-gray-400 hover:text-red-500 transition-colors p-2">
-                  <LogOut size={18} />
-                </button>
-              )}
+              {/* Text Info - Smooth Expansion */}
+              <div
+                className={`
+        flex flex-col ml-3 transition-all duration-300 ease-in-out
+        ${isExpanded ? "w-40 opacity-100" : "w-0 opacity-0 overflow-hidden"}
+      `}
+              >
+                <span className="text-sm font-bold text-gray-900 truncate leading-tight">
+                  {userProfile?.name || "User"}
+                </span>
+                <span className="text-[11px] font-medium text-blue-600 uppercase tracking-wider leading-tight">
+                  {userProfile?.role || "Administrator"}
+                </span>
+              </div>
+
+              {/* Logout Action */}
+              <button
+                onClick={logout}
+                className={`
+        transition-all duration-200 rounded-lg flex items-center justify-center
+        ${
+          isExpanded
+            ? "p-2 text-gray-400 hover:text-red-600 hover:bg-red-50"
+            : "absolute left-full ml-4 opacity-0 group-hover:opacity-100 bg-white shadow-lg p-3 text-red-600 border border-gray-100"
+        }
+      `}
+                title="Logout"
+              >
+                <LogOut size={isExpanded ? 18 : 20} strokeWidth={2.5} />
+              </button>
             </div>
           </div>
 

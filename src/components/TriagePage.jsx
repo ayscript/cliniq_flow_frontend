@@ -4,13 +4,13 @@ import GenderIcon from "./GenderIcon";
 import SendDoctorModal from "./SendDoctorModal";
 
 const VITAL_FIELDS = [
-  { key: "temp",   label: "Temperature",     unit: "°C",    placeholder: "36.5", icon: "🌡️", normalMin: 36.1, normalMax: 37.2 },
-  { key: "pulse",  label: "Pulse Rate",       unit: "bpm",   placeholder: "72",   icon: "❤️",  normalMin: 60,   normalMax: 100  },
-  { key: "resp",   label: "Respiration Rate", unit: "cpm",   placeholder: "16",   icon: "🫁",  normalMin: 12,   normalMax: 20   },
-  { key: "spo2",   label: "SpO₂",             unit: "%",     placeholder: "98",   icon: "🩸",  normalMin: 95,   normalMax: 100  },
-  { key: "weight", label: "Weight",           unit: "kg",    placeholder: "70",   icon: "⚖️"  },
-  { key: "height", label: "Height",           unit: "cm",    placeholder: "170",  icon: "📏"  },
-  { key: "sugar",  label: "Blood Sugar",      unit: "mg/dL", placeholder: "90",   icon: "🍬",  normalMin: 70,   normalMax: 140  },
+  { key: "temp",   label: "Temperature",     unit: "°C",    placeholder: "36.5", icon: "", normalMin: 36.1, normalMax: 37.2 },
+  { key: "pulse",  label: "Pulse Rate",       unit: "bpm",   placeholder: "72",   icon: "",  normalMin: 60,   normalMax: 100  },
+  { key: "resp",   label: "Respiration Rate", unit: "cpm",   placeholder: "16",   icon: "",  normalMin: 12,   normalMax: 20   },
+  { key: "spo2",   label: "SpO₂",             unit: "%",     placeholder: "98",   icon: "",  normalMin: 95,   normalMax: 100  },
+  { key: "weight", label: "Weight",           unit: "kg",    placeholder: "70",   icon: ""  },
+  { key: "height", label: "Height",           unit: "cm",    placeholder: "170",  icon: ""  },
+  { key: "sugar",  label: "Blood Sugar",      unit: "mg/dL", placeholder: "90",   icon: "",  normalMin: 70,   normalMax: 140  },
 ];
 
 const getStatus = (field, value) => {
@@ -120,7 +120,7 @@ const BPCard = ({ sys, dia, onChange, saved }) => {
   );
 };
 
-// ─── Main component ────────────────────────────────────────────────────────
+// ─── Main component 
 const TriagePage = ({ patient, onBack, doctors }) => {
   const [vitals, setVitals] = useState({ temp: "", pulse: "", resp: "", spo2: "", weight: "", height: "", sugar: "" });
   const [bpSys,  setBpSys]  = useState("");
@@ -168,20 +168,20 @@ const TriagePage = ({ patient, onBack, doctors }) => {
         recordedBy: "NURSE CURRENT USER",
       };
 
-      // ── Uncomment when backend API is ready ──────────────────────────
-      // const res = await fetch(
-      //   `${import.meta.env.VITE_API_URL}/patients/${patient.id}/vitals`,
-      //   {
-      //     method: "PATCH",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: `Bearer ${localStorage.getItem("token")}`,
-      //     },
-      //     body: JSON.stringify(payload),
-      //   }
-      // );
-      // if (!res.ok) throw new Error("Save failed");
-      // ─────────────────────────────────────────────────────────────────
+      // ── Uncomment when backend API is ready 
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/patients/${patient.id}/vitals`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+      if (!res.ok) throw new Error("Save failed");
+      
 
       await new Promise((r) => setTimeout(r, 700)); // ← remove when API ready
       setSaved(true);
