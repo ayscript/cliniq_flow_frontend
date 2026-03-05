@@ -25,16 +25,7 @@ const DoctorsDashboard = () => {
   const [selectedPatient, setSelectedPatient] = useState(null);
 
   const handleStartExam = (patient) => {
-    // add a dummy AI dosage suggestion for the demonstration
-    const suggestion = {
-      drug_name: "Amoxicillin",
-      dose_mg_per_day: 500,
-      frequency_per_day: 3,
-      is_safe: true,
-      dose_check_result: { safe: true, reasons: [] },
-    };
-
-    setSelectedPatient({ ...patient, suggestion });
+    setSelectedPatient({ ...patient});
     setIsConsulting(true);
   };
 
@@ -63,7 +54,7 @@ const DoctorsDashboard = () => {
         <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
           <ConsultationRoom
             patient={selectedPatient}
-            suggestion={selectedPatient?.suggestion}
+            // suggestion={selectedPatient?.suggestion}
             onCancel={handleEndConsultation}
             onSave={(data) => {
               console.log("Saving Consultation Data:", data);

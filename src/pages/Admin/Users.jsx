@@ -28,7 +28,8 @@ export const Users = () => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    if (!users[0] && !adminError) {
+
+    if (!users[0] && !adminError){
       fetchUsers();
     }
   }, []);

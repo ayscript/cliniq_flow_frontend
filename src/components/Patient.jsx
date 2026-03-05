@@ -20,10 +20,6 @@ const ConsultationRoom = ({ patient, onSave, onCancel }) => {
   const [transcript, setTranscript] = useState("");
   const [audioChunks, setAudioChunks] = useState([]);
   const recorderRef = React.useRef(null);
-  const [orderCreated, setOrderCreated] = useState(false);
-  const [medOrderId, setMedOrderId] = useState(null);
-  const [overrideMode, setOverrideMode] = useState(false);
-  const [overrideReason, setOverrideReason] = useState("");
 
   // Simple timer logic for the recording
   useEffect(() => {
@@ -138,52 +134,6 @@ const ConsultationRoom = ({ patient, onSave, onCancel }) => {
       }
     } catch (err) {
       console.error("live ASR failed", err);
-    }
-  };
-  const handleAcceptSuggestion = async () => {
-    if (!patient?.id || !patient?.suggestion) return;
-    try {
-      const payload = {
-        visit_id: String(patient.id),
-        drug_name: patient.suggestion.drug_name,
-        dose_mg_per_day: patient.suggestion.dose_mg_per_day,
-        frequency_per_day: patient.suggestion.frequency_per_day,
-        is_safe: patient.suggestion.is_safe,
-        dose_check_result: patient.suggestion.dose_check_result,
-      };
-      const result = await api.post("/med-orders", payload);
-      setOrderCreated(true);
-      setMedOrderId(result.id || result.med_order_id || null);
-    } catch (e) {
-      console.error("failed to create med order", e);
-      alert("Failed to create med order");
-    }
-  };
-
-  const handleSubmitOverride = async () => {
-    if (!medOrderId) return;
-    try {
-      const auth_token = await (await import("../utils/uitils")).getToken();
-      const resp = await fetch(
-        `http://127.0.0.1:8000/med-orders/${medOrderId}/override`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${auth_token}`,
-            "Content-Type": "application/json",
-            "X-Doctor-Id": user?.id || "",
-          },
-          body: JSON.stringify({ reason: overrideReason }),
-        },
-      );
-      if (!resp.ok) throw new Error("status " + resp.status);
-      const data = await resp.json();
-      console.log("override result", data);
-      alert("Override logged");
-      setOverrideMode(false);
-    } catch (e) {
-      console.error("override failed", e);
-      alert("Failed to log override");
     }
   };
 
@@ -302,7 +252,6 @@ const ConsultationRoom = ({ patient, onSave, onCancel }) => {
                 "Review Medical History",
                 "Check Vital Signs",
                 "Symptom Discussion",
-                "Prescription Update",
                 "Next Appointment",
               ].map((task, i) => (
                 <li
@@ -319,63 +268,6 @@ const ConsultationRoom = ({ patient, onSave, onCancel }) => {
             </ul>
           </div>
 
-          {/* dosage suggestion card */}
-          {patient?.suggestion && (
-            <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
-              <h3 className="font-bold text-slate-800 mb-4">
-                AI Dosage Suggestion
-              </h3>
-              <p className="text-sm text-slate-600">
-                Drug: {patient.suggestion.drug_name}
-              </p>
-              <p className="text-sm text-slate-600">
-                Dose: {patient.suggestion.dose_mg_per_day} mg/day &middot;{" "}
-                {patient.suggestion.frequency_per_day}/day
-              </p>
-              <p className="text-sm text-slate-600 mb-4">
-                Safe: {patient.suggestion.is_safe ? "✅" : "⚠️"}
-              </p>
-
-              {!orderCreated ? (
-                <button
-                  onClick={handleAcceptSuggestion}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
-                >
-                  Accept Suggestion
-                </button>
-              ) : (
-                <div>
-                  <p className="text-xs text-green-600 mb-2">
-                    Order created{medOrderId ? ` (ID: ${medOrderId})` : ""}
-                  </p>
-                  {!overrideMode ? (
-                    <button
-                      onClick={() => setOverrideMode(true)}
-                      className="px-3 py-1 text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition-all"
-                    >
-                      Override
-                    </button>
-                  ) : (
-                    <div className="space-y-2">
-                      <textarea
-                        rows={2}
-                        value={overrideReason}
-                        onChange={(e) => setOverrideReason(e.target.value)}
-                        placeholder="Reason for override"
-                        className="w-full border border-slate-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                      />
-                      <button
-                        onClick={handleSubmitOverride}
-                        className="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
-                      >
-                        Submit Override
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
 
           <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm">
             <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">

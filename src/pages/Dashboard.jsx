@@ -18,8 +18,8 @@ import { useAdminStore } from "../store/adminStore";
 const Dashboard = () => {
   // State for storing users and loading status
   // const [users, setUsers] = useState([]);
-  const { users, setUsers, fetchUsers, isLoading, adminError } =
-    useAdminStore();
+
+  const { users, setUsers, fetchUsers, isLoading, adminError } = useAdminStore();
   const [error, setError] = useState(null);
   const [activePage, setActivePage] = useState("dashboard");
 
@@ -61,9 +61,35 @@ const Dashboard = () => {
     { id: "help", label: "Help & Support", icon: <HelpCircle size={20} /> },
   ];
 
-  // NOTE: old add-user API used by early design was removed.
-  // The admin dashboard has been moved to a dedicated /dashboard/users page
-  // which handles user creation and listing.  Left here only for reference.
+
+  // 2. Add User Function
+  const handleAddUser = async (e) => {
+    e.preventDefault();
+    if (adminError) {
+      alert("Admin service is currently unavailable. Cannot add user.");
+      return;
+    }
+    try {
+      const response = await fetch("/add_users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        // Refresh list to show new user and update counts
+        fetchUsers();
+        setFormData({ ...formData, name: "" }); // Reset name field only
+        alert(`${formData.role} added successfully!`);
+      } else {
+        alert("Failed to add user.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error connecting to server.");
+    }
+  };
+
 
   const user = {
     name: "Boluwatife Gbadamosi",
