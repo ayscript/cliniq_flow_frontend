@@ -17,6 +17,7 @@ export const getToken = async () => {
 
   if (data?.session) {
     const token = data.session.access_token;
+    console.log(token)
     return token;
   }
 

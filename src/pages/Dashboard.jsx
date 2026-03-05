@@ -18,15 +18,16 @@ import { useAdminStore } from "../store/adminStore";
 const Dashboard = () => {
   // State for storing users and loading status
   // const [users, setUsers] = useState([]);
-  const { users, setUsers, fetchUsers, isLoading } = useAdminStore();
+  const { users, setUsers, fetchUsers, isLoading, adminError } =
+    useAdminStore();
   const [error, setError] = useState(null);
   const [activePage, setActivePage] = useState("dashboard");
 
-  // State for the Add User Form
-  const [formData, setFormData] = useState({
-    name: "",
-    role: "Doctor", // Default selection
-  });
+  // state for any forms (placeholder for future use)
+  // const [formData, setFormData] = useState({
+  //   name: "",
+  //   role: "Doctor",
+  // });
 
   // Calculate stats dynamically from the user list
   const stats = {
@@ -43,7 +44,7 @@ const Dashboard = () => {
 
   // 1. Fetch Users on Component Mount
   useEffect(() => {
-    if (!users[0]){
+    if (!users[0]) {
       fetchUsers();
     }
   }, []);
@@ -60,29 +61,9 @@ const Dashboard = () => {
     { id: "help", label: "Help & Support", icon: <HelpCircle size={20} /> },
   ];
 
-  // 2. Add User Function
-  const handleAddUser = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("/add_users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        // Refresh list to show new user and update counts
-        fetchUsers();
-        setFormData({ ...formData, name: "" }); // Reset name field only
-        alert(`${formData.role} added successfully!`);
-      } else {
-        alert("Failed to add user.");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error connecting to server.");
-    }
-  };
+  // NOTE: old add-user API used by early design was removed.
+  // The admin dashboard has been moved to a dedicated /dashboard/users page
+  // which handles user creation and listing.  Left here only for reference.
 
   const user = {
     name: "Boluwatife Gbadamosi",
@@ -102,6 +83,11 @@ const Dashboard = () => {
         <p className="text-gray-500 mt-1">
           Overview of hospital staff and personnel management.
         </p>
+        {adminError && (
+          <div className="mt-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700">
+            {adminError}
+          </div>
+        )}
       </header>
 
       {/* Stats Cards Section */}
@@ -131,6 +117,8 @@ const Dashboard = () => {
         <h2 className="text-xl font-semibold mb-4">Staff Directory</h2>
         {isLoading ? (
           <p className="text-gray-500">Loading users...</p>
+        ) : adminError ? (
+          <p className="text-gray-500">Unable to load staff data.</p>
         ) : users.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left">
@@ -141,8 +129,8 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {users.map((u) => (
-                  <tr key={u.id} className="hover:bg-gray-50">
+                {users.map((u, index) => (
+                  <tr key={u.id || index} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       {u.display_name || u.name || u.email || "Not Available"}
                     </td>
