@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { supabase } from "../utils/supabaseClient";
+import { persist } from 'zustand/middleware';
 
-export const useAuthStore = create((set) => {
+export const useAuthStore = create(persist((set) => {
   return {
     isAuthenticated: false,
     user: null,
@@ -37,4 +38,4 @@ export const useAuthStore = create((set) => {
       set({ isAuthenticated: false, user: null });
     },
   };
-});
+}));

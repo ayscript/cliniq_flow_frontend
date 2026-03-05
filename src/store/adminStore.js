@@ -7,7 +7,7 @@ const useAdminStore = create((set) => {
     isLoading: false,
     error: null, // any error message from api calls
     adminError: null, // high-level flag for admin features
-
+    reset: () => set({users: [], isLoading: false, error: null, adminError: null}),
     setUsers: (users) => set({ users }),
     addUser: (user) => set((state) => ({ users: [...state.users, user] })),
     removeUser: (userId) =>

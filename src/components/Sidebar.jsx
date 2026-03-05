@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Menu, X, ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 import { useAuthStore } from "../store/authStore";
 import { Link, NavLink } from "react-router";
+import { useAdminStore } from "../store/adminStore";
 
 const Sidebar = ({
   logo,
@@ -13,6 +14,7 @@ const Sidebar = ({
   const [isExpanded, setIsExpanded] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { logout } = useAuthStore();
+  const { reset } = useAdminStore()
 
   // Toggle sidebar width (Desktop)
   const toggleSidebar = () => setIsExpanded(!isExpanded);
@@ -133,7 +135,10 @@ const Sidebar = ({
 
               {/* Logout Action */}
               <button
-                onClick={logout}
+                onClick={() => {
+                  logout();
+                  reset();
+                }}
                 className={`
         transition-all duration-200 rounded-lg flex items-center justify-center
         ${
