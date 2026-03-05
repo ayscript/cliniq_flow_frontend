@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
   Outlet,
+  useLocation,
 } from "react-router-dom";
 import { LoginPage } from "./pages/LoginPage";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
@@ -25,10 +26,10 @@ const getRoleBasedRoute = (role) => {
   };
   return roleRoutes[role] || "/";
 };
-
 function App() {
   const ProtectedRoute = () => {
     const { user, loading } = useAuth();
+    const location = useLocation();
 
     console.log(user)
 
@@ -40,6 +41,19 @@ function App() {
       );
 
     if (!user) return <Navigate to="/login" replace />;
+
+    // if the authenticated user does not have the admin role, redirect
+    const role = user.user_metadata?.role || user.role;
+    if (role && role !== "admin") {
+      let dest = "/dashboard"; // fallback
+      if (role === "nurse") dest = "/nurse-dashboard";
+      else if (role === "doctor") dest = "/doctor-dashboard";
+      else if (role === "record_officer" || role === "record officer")
+        dest = "/record-officer";
+      if (location.pathname !== dest) {
+        return <Navigate to={dest} replace />;
+      }
+    }
 
     return <Outlet />;
   };
@@ -68,10 +82,9 @@ function App() {
     const { user, loading } = useAuth();
 
     if (loading) return null;
-    
     if (user) {
-      const userRole = user?.user_metadata?.role;
-      const redirectUrl = getRoleBasedRoute(userRole);
+      const role = user?.user_metadata?.role || user?.role;
+      const redirectUrl = getRoleBasedRoute(role);
       return <Navigate to={redirectUrl} replace />;
     }
 

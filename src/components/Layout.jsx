@@ -7,17 +7,23 @@ import {
   HelpCircle,
   FileText,
 } from "lucide-react";
+import { useAdminStore } from "../store/adminStore";
 import Sidebar from "../components/Sidebar";
 
 export default function Layout() {
+  const { adminError } = useAdminStore();
+
   const menuItems = [
     {
       id: "dashboard",
       label: "Dashboard",
       icon: <LayoutDashboard size={20} />,
-      url: "/dashboard"
+      url: "/dashboard",
     },
-    { id: "users", label: "Users", icon: <Users size={20} />, url: "/dashboard/users" },
+    // hide user management link if admin service is offline
+    ...(!adminError
+      ? [{ id: "users", label: "Users", icon: <Users size={20} />, url: "/dashboard/users" }]
+      : []),
     { id: "records", label: "Records", icon: <FileText size={20} />, url: "/dashboard/records" },
     { id: "settings", label: "Settings", icon: <Settings size={20} />, url: "/dashboard/settings" },
     { id: "help", label: "Help & Support", icon: <HelpCircle size={20} />, url: "/dashboard/help" },

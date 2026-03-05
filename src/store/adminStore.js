@@ -5,8 +5,9 @@ const useAdminStore = create((set) => {
   return {
     users: [],
     isLoading: false,
-    error: null,
-    reset: () => set({users: [], isLoading: false, error: null}),
+    error: null, // any error message from api calls
+    adminError: null, // high-level flag for admin features
+    reset: () => set({users: [], isLoading: false, error: null, adminError: null}),
     setUsers: (users) => set({ users }),
     addUser: (user) => set((state) => ({ users: [...state.users, user] })),
     removeUser: (userId) =>
@@ -19,18 +20,27 @@ const useAdminStore = create((set) => {
       })),
     fetchUsers: async () => {
       try {
-        set({ isLoading: true, error: null });
+        set({ isLoading: true, error: null, adminError: null });
         const data = await api.get("/admin/users");
         // API expected to return an array of users directly
-        set({ users: Array.isArray(data) ? data : data.users || [] });
+        let usersArray = Array.isArray(data) ? data : data.users || [];
+        // normalize shape: backend returns { name, role, email }
+        // ensure `name`/`email` exist for older entries
+        usersArray = usersArray.map((u) => ({
+          ...u,
+          name: u.name || u.display_name || u.email || "",
+          email: u.email || "",
+        }));
+        set({ users: usersArray });
       } catch (err) {
-        console.error(err);
+        console.error("fetchUsers failed", err);
+        const message =
+          err.message || "An unexpected error occurred while fetching users.";
         set({
-          error:
-            err.message || "An unexpected error occurred while fetching users.",
+          error: message,
+          adminError: "Unable to reach admin service. Try again later.",
         });
-        // keep existing users or clear
-        set({ users: [] });
+        // leave any previous users intact so that UI doesn't blank out
       } finally {
         set({ isLoading: false });
       }

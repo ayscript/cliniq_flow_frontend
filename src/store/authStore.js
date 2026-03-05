@@ -19,13 +19,20 @@ export const useAuthStore = create(persist((set) => {
         } else {
           console.log("Login successful:", data.user);
           set({ isAuthenticated: true, user: data.user });
+          // return the user object so callers can redirect based on role
+          return data.user;
         }
       } catch (error) {
-        set({ error: error.message || "An unexpected error occurred during login." });
+        set({
+          error: error.message || "An unexpected error occurred during login.",
+        });
+        // rethrow so caller knows login failed
+        throw error;
       } finally {
         set({ loading: false });
       }
     },
+
     logout: async () => {
       const { error } = await supabase.auth.signOut();
       set({ isAuthenticated: false, user: null });

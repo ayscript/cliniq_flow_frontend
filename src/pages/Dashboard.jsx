@@ -18,8 +18,10 @@ import { useAuthStore } from "../store/authStore";
 const Dashboard = () => {
   // State for storing users and loading status
   // const [users, setUsers] = useState([]);
-  const { users, fetchUsers, isLoading } = useAdminStore();
-  const { user } = useAuthStore()
+  const { users, setUsers, fetchUsers, isLoading, adminError } = useAdminStore();
+  const { user } = useAuthStore();
+  const [error, setError] = useState(null);
+  const [activePage, setActivePage] = useState("dashboard");
 
   // Calculate stats dynamically from the user list
   const stats = {
@@ -36,7 +38,7 @@ const Dashboard = () => {
 
   // 1. Fetch Users on Component Mount
   useEffect(() => {
-    if (!users[0]){
+    if (!users[0]) {
       fetchUsers();
     }
   }, []);
@@ -52,6 +54,7 @@ const Dashboard = () => {
     { id: "settings", label: "Settings", icon: <Settings size={20} /> },
     { id: "help", label: "Help & Support", icon: <HelpCircle size={20} /> },
   ];
+
 
   // 2. Add User Function
   // const handleAddUser = async (e) => {
@@ -78,8 +81,8 @@ const Dashboard = () => {
   // };
 
   const user_profile = {
-    name: user.email,
-    role: user.user_metadata.role,
+    name: user?.email || "Boluwatife Gbadamosi",
+    role: user?.user_metadata?.role || "Super Admin",
     avatar: "https://i.pravatar.cc/150?img=12",
   };
 
@@ -95,6 +98,11 @@ const Dashboard = () => {
         <p className="text-gray-500 mt-1">
           Overview of hospital staff and personnel management.
         </p>
+        {adminError && (
+          <div className="mt-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700">
+            {adminError}
+          </div>
+        )}
       </header>
 
       {/* Stats Cards Section */}
@@ -124,6 +132,8 @@ const Dashboard = () => {
         <h2 className="text-xl font-semibold mb-4">Staff Directory</h2>
         {isLoading ? (
           <p className="text-gray-500">Loading users...</p>
+        ) : adminError ? (
+          <p className="text-gray-500">Unable to load staff data.</p>
         ) : users.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left">
@@ -135,7 +145,7 @@ const Dashboard = () => {
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {users.map((u, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
+                  <tr key={u.id || index} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       {u.display_name || u.name || u.email || "Not Available"}
                     </td>

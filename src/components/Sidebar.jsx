@@ -45,10 +45,10 @@ const Sidebar = ({
           <div className="h-16 flex items-center justify-center border-b border-gray-100">
             {isExpanded ? (
               <span className="text-xl font-bold text-blue-600 truncate px-4">
-                {logo || "App Name"}
+                {logo || "Cliniq Flow"}
               </span>
             ) : (
-              <span className="text-xl font-bold text-blue-600">A</span>
+              <span className="text-xl font-bold text-blue-600">CF</span>
             )}
           </div>
 

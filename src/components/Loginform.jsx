@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { Eye, EyeOff } from "lucide-react";
 import { Info } from "lucide-react";
@@ -11,6 +12,7 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const { login, loading, error, setError } = useAuthStore();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setError(null);
@@ -19,10 +21,28 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try{
-      await login(formData);
-    } catch(e){
-      console.log(e)
+    try {
+      const user = await login(formData);
+      // after successful login, redirect based on user role metadata
+      const role = user?.user_metadata?.role || user?.role;
+      switch (role) {
+        case "nurse":
+          navigate("/nurse-dashboard", { replace: true });
+          break;
+        case "doctor":
+          navigate("/doctor-dashboard", { replace: true });
+          break;
+        case "record_officer":
+        case "record officer":
+          navigate("/record-officer", { replace: true });
+          break;
+        default:
+          // default to admin dashboard
+          navigate("/dashboard", { replace: true });
+          break;
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -40,7 +60,9 @@ const LoginForm = () => {
         {/* Error display */}
         {error && (
           <div className="mb-4 p-3 bg-red-100 text-red-700 border-l-4 border-red-700 flex gap-2 items-center">
-            <span className="mr-2"><Info size={16} /></span>
+            <span className="mr-2">
+              <Info size={16} />
+            </span>
             <span>{error}</span>
           </div>
         )}
@@ -87,7 +109,11 @@ const LoginForm = () => {
                 placeholder="**********"
                 onChange={handleChange}
               />
-              <button type="button" className="absolute right-3 top-3 text-gray-500 hover:text-gray-800" onClick={() => setShowPassword(!showPassword)}>
+              <button
+                type="button"
+                className="absolute right-3 top-3 text-gray-500 hover:text-gray-800"
+                onClick={() => setShowPassword(!showPassword)}
+              >
                 {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
               </button>
             </div>
